@@ -21,6 +21,10 @@ public:
 	std::vector<Action> get_actions(); //returns a vector of legal action at current state
 
 	Action random_action(); //returns a random action legal at the current state;
+
+	int evaluate(); //returns the utility as an integer if state is terminal, otherwise throws error
+
+	std::string to_string(); //print the value as string
 };
 
 }
