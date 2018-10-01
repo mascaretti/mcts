@@ -1,3 +1,11 @@
+#ifndef HPP__OXO__HEADER__HPP
+#define HPP__OXO__HEADER__HPP
+
+#include <string>
+#include <vector>
+#include <array>
+#include <utility>
+
 
 namespace game {
 
@@ -6,9 +14,13 @@ using Action= std::pair<int, int>;
 
 class Oxo
 {
+private:
+	std::array<std::array<int, 3>> board;
+
 public:
 //interfaccia pubblica
 	//constructors (default)
+	Oxo();
 	Oxo(const Oxo& other);
 	Oxo& operator=(const Oxo& other);
 
@@ -28,3 +40,5 @@ public:
 };
 
 }
+
+#endif
