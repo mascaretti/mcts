@@ -18,10 +18,11 @@ class NoRandomActions{}; //to throw an error if there are no random actions poss
 class NoActionsLeft{}; //if no actions are left
 class GameNotOver{}; //if the game is not over and we want a utility value
 
+/*
 struct Action
 {
-	/*The class Action implements the action possible on the board and
-	* defines to constructors*/
+	// The class Action implements the action possible on the board and
+	// defines to constructors
 	int row{0};
 	int column{0};
 
@@ -35,12 +36,30 @@ struct Action
 };
 
 bool operator==(const Action& lhs, const Action& rhs);
-
-
+*/
 
 class Oxo
 {
 	/*The class Oxo implements the usual 3x3 tic-tac-toe board*/
+public:
+	struct Action
+	{
+		/*The class Action implements the action possible on the board and
+		* defines to constructors*/
+		int row{0};
+		int column{0};
+
+		Action()= default;
+		Action(std::pair<int, int> input);
+		Action(const int& first, const int& second);
+
+		//for debugging
+		std::string to_string();
+
+		bool operator==(const Action& rhs);
+
+	};
+
 private:
 	bool is_terminal{false};
 	int agent_id{1};
@@ -54,7 +73,7 @@ private:
 	std::default_random_engine gen;
 
 	void update_terminal_status();
-	
+
 
 	char print_helper(int value);
 
