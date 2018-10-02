@@ -9,17 +9,6 @@
 
 int main(int argc, char** argv) {
 
-// Shared ptr test
-/*
-std::vector<double> my_vec(5, 0.0);
-auto it = my_vec.begin();
-std::shared_ptr<double> select(std::make_shared<double>(*it));
-double* my_pointer(&(*select));
-std::cout << *my_pointer << std::endl;
-*select = 6.0;
-std::cout << *my_pointer << std::endl;
-*/
-
 // Time test
 MPI_Init(nullptr, nullptr);
 
