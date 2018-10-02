@@ -5,27 +5,53 @@
 #include <vector>
 #include <array>
 #include <utility>
+#include <cassert>
 
 
 namespace game {
 
-using Action= std::pair<int, int>;
+/*The following classes are used to throw errors when one occurs*/
+class ActionAlreadyPlayed{}; //to throw an error if the action has been played
+class NoRandomActions{}; //to throw an error if there are no random actions possible?
+class NoActionsLeft{}; //if no actions are left
 
-class IllegalAction{}; //to throw an error
-class NoRandomActions{};
+struct Action
+{
+	/*The class Action implements the action possible on the board and
+	* defines to constructors*/
+	int row{0};
+	int column{0};
+
+	Action()= default;
+	Action(std::pair<int, int> input);
+	Action(int first, int second);
+
+};
+
+bool operator==(const Action& lhs, const Action& rhs);
+
+
 
 class Oxo
 {
+	/*The class Oxo implements the usual 3x3 tic-tac-toe board*/
 private:
 	bool is_terminal{false};
 	int agent_id{1};
+
 	std::array<std::array<int, 3>, 3> board;
-	Action action;
+	Action last_action;
+
+	bool winner_exists{false};
+
+
+	void update_terminal_status();
+	int random_action_seed{0}; //TODO
 
 public:
-//interfaccia pubblica
 
 	Oxo();
+	Oxo(int seed);
 	Oxo(const Oxo& other)= default;
 	Oxo& operator=(const Oxo& other)= default;
 
@@ -43,8 +69,11 @@ public:
 
 	std::string to_string(); //print the value as string
 
+	//todo
+	void set_seed(); //sets new seed
+
 	//just to check
-	const std::array<int, 3>& get_row(unsigned int i) const;
+	std::array<int, 3>& get_row(unsigned int i);
 };
 
 }
