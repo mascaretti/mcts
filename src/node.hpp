@@ -1,12 +1,6 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-/* ??? */
-// Vittorie da qui in poi?
-// UCT: deve essere per forza immagazzinato
-// Nodo foglia?
-/* ??? */
-
 #include <vector>
 #include <memory>
 #include <cmath>
@@ -37,8 +31,8 @@ public:
 
   /* Methods */
 
-  void add_child(const Node<Game>&);
   void update(double);
+  void update(double, unsigned);
   bool all_moves_tried(void) const;
   bool has_children(void) const;
   NodePointerType make_child(const Move&);
@@ -47,24 +41,12 @@ public:
 
   double get_wins(void) const { return wins; }
   unsigned get_visits(void) const { return visits; }
-  const NodePointerType get_parent(void) const { return parent; }
-  NodePointerType get_parent(void) { return parent; }
+  const Node* get_parent(void) const { return parent; }
+  Node* get_parent(void) { return parent; }
   std::vector< NodePointerType > get_children(void) const { return children; }
   std::vector< MovePointerType > get_moves(void) const { return possible_moves; }
   Game get_game(void) const { return game_state; }
   int get_player(void) const { return player; }
-
-  /*
-  FOLLIA
-  typedef typename std::vector< NodePointerType >::iterator NodeIterator;
-  typedef typename std::vector< MovePointerType >::iterator MoveIterator;
-  typedef typename std::vector< NodePointerType >::const_iterator ConstNodeIterator;
-  typedef typename std::vector< MovePointerType >::const_iterator ConstMoveIterator;
-  NodeIterator get_first_child(void) { return children.begin(); }
-  ConstNodeIterator get_first_child(void) const { return children.cbegin(); }
-  NodeIterator get_last_child(void) { return children.end(); }
-  ConstNodeIterator get_last_child(void) const { return children.cend(); }
-  */
 
   /* Destructor */
   ~Node() = default;
@@ -72,17 +54,13 @@ public:
 private:
 
   Game game_state;
-
-  NodePointerType parent;
+  Node* parent;
 
   std::vector< NodePointerType > children;
   std::vector< MovePointerType > possible_moves;
   void erase_move(const Move&);
 
   int player;
-
-  // Move move_to_here;
-  // unsigned depth;
 
   double wins;
   unsigned visits;
@@ -114,17 +92,18 @@ Node<Game>::Node(const Game& input_game):
 
 template<class Game>
 void
-Node<Game>::add_child(const Node<Game>& child_play)
-{
-  children.emplace_back(std::make_shared<Node<Game>>(child_play));
-}
-
-template<class Game>
-void
 Node<Game>::update(double result)
 {
   wins += result;
   visits += 1;
+}
+
+template<class Game>
+void
+Node<Game>::update(double result, unsigned new_visits)
+{
+  wins += result;
+  visits += new_visits;
 }
 
 template<class Game>
@@ -162,8 +141,6 @@ Node<Game>::erase_move(const Move& next_move)
       possible_moves.erase(it);
   }
 }
-
-/* Need definition for constructor, copy assignment and destructor... */
 
 
 #endif /* NODE_HPP */
