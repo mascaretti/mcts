@@ -23,12 +23,11 @@ public:
 
   double compute_ucb(const NodePointerType&) const;
   NodePointerType best_child_ucb(const NodePointerType&) const;
-  void set_rand_seed(void);
 
   NodePointerType select(void) const;
   NodePointerType expand(NodePointerType);
   double rollout(NodePointerType) const;
-  void back_propagation(NodePointerType);
+  void back_propagation(NodePointerType, double);
 
   Move uct_search(void);
 
@@ -40,14 +39,11 @@ public:
 
   /* Constructors */
   MonteCarloSearchTree();
-  MonteCarloSearchTree(const MonteCarloSearchTree<Game>&);
+  MonteCarloSearchTree(int);
+  MonteCarloSearchTree(unsigned, unsigned, double);
   MonteCarloSearchTree(int, unsigned, unsigned, double);
 
-  /* Copy-assignment */
-  MonteCarloSearchTree<Game>& operator = (const MonteCarloSearchTree<Game>&);
-
-  /* Destructor */
-  ~MonteCarloSearchTree();
+  /* Otherwise: default (for now...) */
 
 private:
 
@@ -56,11 +52,12 @@ private:
 
   int seed;
   std::default_random_engine rng;
+  void set_rand_seed(void);
 
-  unsigned outer_iter;
-  unsigned inner_iter;
+  unsigned outer_iter = 1000;
+  unsigned inner_iter = 100;
 
-  double ucb_constant;
+  double ucb_constant = sqrt(2.0);
 
 };
 
@@ -70,11 +67,38 @@ private:
 /* - - - - - - - - - - - - - - - - - */
 
 template<class Game>
+MonteCarloSearchTree<Game>::MonteCarloSearchTree():
+  root(), current_game_node(root)
+  {
+    set_rand_seed();
+    rng.seed(seed);
+  }
+
+template<class Game>
+MonteCarloSearchTree<Game>::MonteCarloSearchTree(int s):
+  root(), current_game_node(root),
+  seed(s), rng(s) { }
+
+template<class Game>
+MonteCarloSearchTree<Game>::MonteCarloSearchTree(unsigned oi, unsigned ii, double c):
+  root(), current_game_node(root),
+  outer_iter(oi), inner_iter(ii), ucb_constant(c)
+  {
+    set_rand_seed();
+    rng.seed(seed);
+  }
+
+template<class Game>
+MonteCarloSearchTree<Game>::MonteCarloSearchTree(int s, unsigned oi, unsigned ii, double c):
+  root(), current_game_node(root),
+  seed(s), rng(s), outer_iter(oi), inner_iter(ii), ucb_constant(c) { }
+
+template<class Game>
 double
 MonteCarloSearchTree<Game>::compute_ucb(const NodePointerType& target_node) const
 {
   return ( target_node->get_wins() / (double)(target_node->get_visits()) ) +
-    ucb_constant * sqrt( log( (double)((target_node->get_parent())->get_visits()) )
+    ucb_constant * sqrt( log( (double)(target_node->get_parent()->get_visits()) )
     / (double)(target_node->get_visits()) );
 }
 
@@ -96,7 +120,8 @@ MonteCarloSearchTree<Game>::best_child_ucb(const NodePointerType& target_parent)
 
 template<class Game>
 typename Node<Game>::NodePointerType  /* ??? */
-MonteCarloSearchTree<Game>::select() const {
+MonteCarloSearchTree<Game>::select() const
+{
   NodePointerType selected_node = current_game_node;
   while( selected_node->all_moves_tried() && selected_node->has_children() )
     selected_node = best_child_ucb(selected_node);
@@ -105,7 +130,8 @@ MonteCarloSearchTree<Game>::select() const {
 
 template<class Game>
 typename Node<Game>::NodePointerType  /* ??? */
-MonteCarloSearchTree<Game>::expand(NodePointerType current_parent) {
+MonteCarloSearchTree<Game>::expand(NodePointerType current_parent)
+{
   NodePointerType expanded_node = nullptr;
   if( !(current_parent->all_moves_tried()) ) {
     std::vector<Move> available_moves = current_parent->get_moves();
@@ -123,7 +149,9 @@ MonteCarloSearchTree<Game>::expand(NodePointerType current_parent) {
 
 template<class Game>
 double
-MonteCarloSearchTree<Game>::rollout(NodePointerType current_leaf) const {
+MonteCarloSearchTree<Game>::rollout(NodePointerType current_leaf) const
+{
+  set_rand_seed();
   double total_score(0.0);
   MPI_Init(nullptr, nullptr);
   int size, rank;
@@ -145,13 +173,19 @@ MonteCarloSearchTree<Game>::rollout(NodePointerType current_leaf) const {
   }
   MPI_Allreduce(MPI_IN_PLACE, &total_score, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   MPI_Finalize();
-  return total_score/(double)inner_iter;
+  return total_score;
 }
 
 template<class Game>
 void
-MonteCarloSearchTree<Game>::back_propagation(NodePointerType current_leaf) {
-  /* ... */
+MonteCarloSearchTree<Game>::back_propagation(NodePointerType current_leaf, double score)
+{
+  current_leaf->update(score, inner_iter);
+  Node<Game>* temp_ptr = current_leaf.get_parent();
+  while ( temp_ptr!=nullptr ) {
+    temp_ptr->update(score, inner_iter);
+    temp_ptr = temp_ptr->get_parent();
+  }
 }
 
 template<class Game>
