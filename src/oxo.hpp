@@ -12,6 +12,7 @@ namespace game {
 using Action= std::pair<int, int>;
 
 class IllegalAction{}; //to throw an error
+class NoRandomActions{};
 
 class Oxo
 {
@@ -19,6 +20,7 @@ private:
 	bool is_terminal{false};
 	int agent_id{1};
 	std::array<std::array<int, 3>, 3> board;
+	Action action;
 
 public:
 //interfaccia pubblica
@@ -39,7 +41,10 @@ public:
 
 	int evaluate(); //returns the utility as an integer if state is terminal, otherwise throws error
 
-	std::string to_string() const; //print the value as string
+	std::string to_string(); //print the value as string
+
+	//just to check
+	const std::array<int, 3>& get_row(unsigned int i) const;
 };
 
 }

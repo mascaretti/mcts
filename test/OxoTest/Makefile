@@ -5,7 +5,7 @@ LDLFLAGS = -Wall -std=c++14
 SRCS = main.cpp ../../src/oxo.cpp
 OBJS = $(SRCS:.cpp=.o)
 HEADERS = $(wildcard *.hpp)
-EXEC = main.out
+EXEC = main
 .PHONY = all clean distclean
 all: $(EXEC)
 
