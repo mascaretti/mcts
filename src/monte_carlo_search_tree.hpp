@@ -6,7 +6,10 @@
 #include <mpi.h>
 #include <ctime>
 
-// Declaration of the template class
+
+/* - - - - - - - - - - - - - - - - - */
+// Declaration of the template class //
+/* - - - - - - - - - - - - - - - - - */
 
 template<class Game>
 class MonteCarloSearchTree {
@@ -36,15 +39,15 @@ public:
   void set_ucb_constant(double c) { ucb_constant = c; }
 
   /* Constructors */
-  MonteCarloSearchTree<Game>();
-  MonteCarloSearchTree<Game>(const MonteCarloSearchTree<Game>&);
-  MonteCarloSearchTree<Game>(int, unsigned, unsigned, double);
+  MonteCarloSearchTree();
+  MonteCarloSearchTree(const MonteCarloSearchTree<Game>&);
+  MonteCarloSearchTree(int, unsigned, unsigned, double);
 
   /* Copy-assignment */
-  // ...
+  MonteCarloSearchTree<Game>& operator = (const MonteCarloSearchTree<Game>&);
 
   /* Destructor */
-  // ...
+  ~MonteCarloSearchTree();
 
 private:
 
@@ -61,7 +64,10 @@ private:
 
 };
 
-// Definition of methods
+
+/* - - - - - - - - - - - - - - - - - */
+// Definition of methods             //
+/* - - - - - - - - - - - - - - - - - */
 
 template<class Game>
 double
@@ -100,13 +106,46 @@ MonteCarloSearchTree<Game>::select() const {
 template<class Game>
 typename Node<Game>::NodePointerType  /* ??? */
 MonteCarloSearchTree<Game>::expand(NodePointerType current_parent) {
-  /* ... */
+  NodePointerType expanded_node = nullptr;
+  if( !(current_parent->all_moves_tried()) ) {
+    std::vector<Move> available_moves = current_parent->get_moves();
+    std::size_t tot_moves = available_moves.size();
+    std::uniform_int_distribution<> choose(0, tot_moves-1);
+    MPI_Init(nullptr, nullptr);
+    int idx, rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if (rank==0) idx = choose(rng);
+    MPI_Bcast(&idx, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Finalize();
+    expanded_node = current_parent.make_child(available_moves[idx]);
+  }
 }
 
 template<class Game>
 double
 MonteCarloSearchTree<Game>::rollout(NodePointerType current_leaf) const {
-  /* ... */
+  double total_score(0.0);
+  MPI_Init(nullptr, nullptr);
+  int size, rank;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  unsigned local_iter = inner_iter/size;
+  unsigned reminder = inner_iter%size;
+  if (rank<reminder) local_iter++;
+  for (unsigned i = 0; i<local_iter; ++i) {
+    Game temp_game = current_leaf->get_game();
+    temp_game.set_seed(seed);
+    while ( temp_game.get_terminal_status() )
+      temp_game.apply_action(temp_game.random_action());
+    double result = (double)temp_game.evaluate();
+    result = result*(temp_game.get_agent_id()==current_leaf->get_player()) -
+      result*(temp_game.get_agent_id()!=current_leaf->get_player()) +
+      0.5*(result==0);
+    total_score += result;
+  }
+  MPI_Allreduce(MPI_IN_PLACE, &total_score, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+  MPI_Finalize();
+  return total_score/(double)inner_iter;
 }
 
 template<class Game>
