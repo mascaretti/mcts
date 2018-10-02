@@ -73,7 +73,7 @@ public:
 
 	std::vector<Action> get_actions() const; //returns a vector of legal action at current state
 
-	Action random_action() const; //returns a random action legal at the current state;
+	Action random_action(); //returns a random action legal at the current state;
 
 	int evaluate(); //returns the utility as an integer if state is terminal, otherwise throws error
 

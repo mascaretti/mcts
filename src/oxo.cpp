@@ -155,7 +155,7 @@ std::vector<Action> Oxo::get_actions() const {
 	return action_vector;
 }
 
-Action Oxo::random_action() const
+Action Oxo::random_action()
 {
 	if (is_terminal == true)
 		throw NoRandomActions{};
