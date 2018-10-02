@@ -1,56 +1,25 @@
 #include "../../src/oxo.hpp"
-#include <iostream>
 
 int main(int argc, char const *argv[])
 {
-	game::Oxo first;
 
-	//testing agent id
-	std::cout << "Agent id: " << first.get_agent_id() << '\n';
+	game::Oxo test_game;
 
-	//testing default first row
-	auto first_row= first.get_row(0);
-	for (auto i : first_row) { 
-		std::cout << i << '\t';
-	}
-	std::cout << '\n';
+	do {
 
-	//testing inbound apply action
-	first.apply_action(std::make_pair(0, 2));
-	std::cout << "Agent id: " << first.get_agent_id() << '\n';
+		std::cout << "Play a move" << '\n';
+		std::cout << "Insert row: ";
+		int row;
+		std::cin >> row;
+		std::cout << "Insert column: ";
+		int column;
+		std::cin >> column;
 
-	first_row= first.get_row(0);
-	for (auto i : first_row) { 
-		std::cout << i << '\t';
-	}
-	std::cout << '\n';
+		test_game.apply_action(game::Action{row, column});
 
-	
-	//testing outbound apply action
-	/*first.apply_action(std::make_pair(0, 3));
-	std::cout << "Agent id: " << first.get_agent_id() << '\n';
+		test_game.print();
 
-	first_row= first.get_row(0);
-	for (auto i : first_row) { 
-		std::cout << i << '\t';
-	}
-	std::cout << '\n';*/
-
-	
-	//testing same action played twice
-	/*first.apply_action(std::make_pair(0, 2));
-	std::cout << "Agent id: " << first.get_agent_id() << '\n';
-
-	first_row= first.get_row(0);
-	for (auto i : first_row) { 
-		std::cout << i << '\t';
-	}
-	std::cout << '\n';*/
-
-	//check equality between actions
-	game::Action one{1, 2}, two{1, 0}, three{1, 2};
-	std::cout << "One equals two? " << (one == two) << std::endl;
-	std::cout << "One equals three? " << (one == three) << std::endl;
+	} while (test_game.get_terminal_status() == false);
 
 	return 0;
 }

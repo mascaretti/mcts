@@ -6,6 +6,8 @@
 #include <array>
 #include <utility>
 #include <cassert>
+#include <iostream>
+#include <random>
 
 
 namespace game {
@@ -14,6 +16,7 @@ namespace game {
 class ActionAlreadyPlayed{}; //to throw an error if the action has been played
 class NoRandomActions{}; //to throw an error if there are no random actions possible?
 class NoActionsLeft{}; //if no actions are left
+class GameNotOver{}; //if the game is not over and we want a utility value
 
 struct Action
 {
@@ -24,7 +27,10 @@ struct Action
 
 	Action()= default;
 	Action(std::pair<int, int> input);
-	Action(int first, int second);
+	Action(const int& first, const int& second);
+
+	//for debugging
+	std::string to_string();
 
 };
 
@@ -44,9 +50,13 @@ private:
 
 	bool winner_exists{false};
 
+	int random_action_seed{0};
+	std::default_random_engine gen;
 
 	void update_terminal_status();
-	int random_action_seed{0}; //TODO
+	
+
+	char print_helper(int value);
 
 public:
 
@@ -67,13 +77,15 @@ public:
 
 	int evaluate(); //returns the utility as an integer if state is terminal, otherwise throws error
 
-	std::string to_string(); //print the value as string
+	void print_board(); //print the value as string
 
-	//todo
-	void set_seed(); //sets new seed
+	void set_seed(int new_seed); //sets new seed
 
-	//just to check
-	std::array<int, 3>& get_row(unsigned int i);
+	//for debugging
+	void print();
+
+	//for debugging
+	Action get_last_action() const;
 };
 
 }
