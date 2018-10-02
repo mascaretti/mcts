@@ -24,9 +24,9 @@ public:
 
   /* Costructors */
 
-  Node<Game>();
-  Node<Game>(const Game&);
-  Node<Game>(const Node<Game>&) = default;
+  Node(void);
+  Node(const Game&);
+  Node(const Node&) = default;
 
   /* Copy-assigment */
 
@@ -84,7 +84,7 @@ private:
 // Definition of methods
 
 template<class Game>
-Node<Game>():
+Node<Game>::Node():
   game_state(), parent(nullptr), wins(0.0)
   {
     player = game_state.get_agent_id();
@@ -92,7 +92,7 @@ Node<Game>():
   }
 
 template<class Game>
-Node<Game>(const Game& input_game):
+Node<Game>::Node(const Game& input_game):
   game_state(input_game), parent(nullptr), wins(0.0)
   {
     player = game_state.get_agent_id();
