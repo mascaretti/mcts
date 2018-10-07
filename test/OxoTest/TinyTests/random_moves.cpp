@@ -3,7 +3,7 @@
 int main(int argc, char const *argv[])
 {
 	game::Oxo new_game{19};
-	game::Action new_action;
+	game::Oxo::Action new_action;
 
 	do {
 		new_action= new_game.random_action();

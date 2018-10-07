@@ -3,18 +3,18 @@
 namespace game {
 
 //Constructors for action
-Action::Action(std::pair<int, int> input): row{input.first}, column{input.second} {
+Oxo::Action::Action(std::pair<int, int> input): row{input.first}, column{input.second} {
 	assert(row >= 0 and row <= 2);
 	assert(column >= 0 and column <= 2);
 }
 
-Action::Action(const int& first, const int& second): row{first}, column{second} {
+Oxo::Action::Action(const int& first, const int& second): row{first}, column{second} {
 		assert(row >= 0 and row <= 2);
 		assert(column >= 0 and column <= 2);
 }
 
 //for debugging
-std::string Action::to_string() {
+std::string Oxo::Action::to_string() {
 	std::string data;
 	data.append("(");
 	data.append(std::to_string(row));
@@ -26,9 +26,9 @@ std::string Action::to_string() {
 
 
 //Equality operator between actions
-bool operator==(const Action& lhs, const Action& rhs)
+bool Oxo::Action::operator==(const Action& rhs)
 	{
-		if ((lhs.row == rhs.row) and (lhs.column == rhs.column))
+		if ((row == rhs.row) and (column == rhs.column))
 			return true;
 		else
 			return false;
@@ -138,7 +138,7 @@ void Oxo::apply_action(const Action& action) {
 
 }
 
-std::vector<Action> Oxo::get_actions() const {
+std::vector<Oxo::Action> Oxo::get_actions() const {
 
 	//check if actions available
 	if (is_terminal == true)
@@ -155,7 +155,7 @@ std::vector<Action> Oxo::get_actions() const {
 	return action_vector;
 }
 
-Action Oxo::random_action()
+Oxo::Action Oxo::random_action()
 {
 	if (is_terminal == true)
 		throw NoRandomActions{};
@@ -186,7 +186,7 @@ void Oxo::set_seed(int new_seed)
 	gen.seed(random_action_seed);
 }
 
-Action Oxo::get_last_action() const {
+Oxo::Action Oxo::get_last_action() const {
 	return last_action;
 }
 

@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
 		int column;
 		std::cin >> column;
 
-		test_game.apply_action(game::Action{row, column});
+		test_game.apply_action({row, column});
 
 		test_game.print();
 
