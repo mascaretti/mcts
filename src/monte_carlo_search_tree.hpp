@@ -11,6 +11,8 @@
 // Declaration of the template class //
 /* - - - - - - - - - - - - - - - - - */
 
+// NB! THE LIST OF POSSIBLE MOVES IS NOW A VECTOR OF MOVES, NOT A VECTOR OF POINTERS!!!!!
+
 template<class Game>
 class MonteCarloSearchTree {
 

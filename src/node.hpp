@@ -17,7 +17,7 @@ public:
 
   typedef typename Game::Action Move;
   typedef typename std::shared_ptr< Node<Game> > NodePointerType;
-  typedef typename std::shared_ptr< Move > MovePointerType;
+  // typedef typename std::shared_ptr< Move > MovePointerType;
 
   /* Costructors */
 
@@ -44,7 +44,7 @@ public:
   const Node* get_parent(void) const { return parent; }
   Node* get_parent(void) { return parent; }
   std::vector< NodePointerType > get_children(void) const { return children; }
-  std::vector< MovePointerType > get_moves(void) const { return possible_moves; }
+  std::vector< Move > get_moves(void) const { return possible_moves; }
   Game get_game(void) const { return game_state; }
   int get_player(void) const { return player; }
 
@@ -57,7 +57,8 @@ private:
   Node* parent;
 
   std::vector< NodePointerType > children;
-  std::vector< MovePointerType > possible_moves;
+  // std::vector< MovePointerType > possible_moves;
+  std::vector< Move > possible_moves;
   void erase_move(const Move&);
 
   int player;
@@ -137,7 +138,7 @@ void
 Node<Game>::erase_move(const Move& next_move)
 {
   for (auto it = possible_moves.begin(); it!=possible_moves.end(); ++it) {
-    if ( **it == next_move)
+    if ( *it == next_move)
       possible_moves.erase(it);
   }
 }
