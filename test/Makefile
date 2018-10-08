@@ -10,12 +10,13 @@ EXEC = main
 
 all: $(EXEC)
 
+$(EXEC) : $(OBJS)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+$(OBJS) : $(SRCS) $(HEADERS)
+
 clean:
 	-rm -f $(OBJS)
 
 distclean:
 	-rm -f $(EXEC) $(OBJS)
-
-$(EXEC) : $(OBJS)
-
-$(OBJS) : $(SRCS) $(HEADERS)

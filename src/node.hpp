@@ -10,13 +10,15 @@
 // Declaration of the template class //
 /* - - - - - - - - - - - - - - - - - */
 
-template<class Game>
+template<class Game, class Move>
+// template<class Game>
 class Node {
 
 public:
 
-  typedef typename Game::Action Move;
-  typedef typename std::shared_ptr< Node<Game> > NodePointerType;
+  // typedef typename Game::Action Move;
+  // typedef typename std::shared_ptr< Node<Game> > NodePointerType;
+  typedef typename std::shared_ptr< Node<Game,Move> > NodePointerType;
 
   /* Costructors */
 
@@ -26,7 +28,8 @@ public:
 
   /* Copy-assigment */
 
-  Node<Game>& operator = (const Node<Game>&) = default;
+  // Node<Game>& operator = (const Node<Game>&) = default;
+  Node<Game,Move>& operator = (const Node<Game,Move>&) = default;
 
   /* Methods */
 
@@ -74,8 +77,8 @@ private:
 // Definition of methods             //
 /* - - - - - - - - - - - - - - - - - */
 
-template<class Game>
-Node<Game>::Node():
+template<class Game, class Move>
+Node<Game,Move>::Node():
   game_state(), parent(nullptr), wins(0.0)
   {
     player = game_state.get_agent_id();
@@ -83,8 +86,8 @@ Node<Game>::Node():
     visits = 0;
   }
 
-template<class Game>
-Node<Game>::Node(const Game& input_game):
+template<class Game, class Move>
+Node<Game,Move>::Node(const Game& input_game):
   game_state(input_game), parent(nullptr), wins(0.0)
   {
     player = game_state.get_agent_id();
@@ -92,52 +95,52 @@ Node<Game>::Node(const Game& input_game):
     visits = 0;
   }
 
-template<class Game>
+template<class Game, class Move>
 void
-Node<Game>::update(double result)
+Node<Game,Move>::update(double result)
 {
   wins += result;
   visits += 1;
 }
 
-template<class Game>
+template<class Game, class Move>
 void
-Node<Game>::update(double result, unsigned new_visits)
+Node<Game,Move>::update(double result, unsigned new_visits)
 {
   wins += result;
   visits += new_visits;
 }
 
-template<class Game>
+template<class Game, class Move>
 bool
-Node<Game>::all_moves_tried() const
+Node<Game,Move>::all_moves_tried() const
 {
   return possible_moves.empty();
 }
 
-template<class Game>
+template<class Game, class Move>
 bool
-Node<Game>::has_children() const
+Node<Game,Move>::has_children() const
 {
   return !(children.empty());
 }
 
-template<class Game>
-typename std::shared_ptr<Node<Game>>  /* ??? */
-Node<Game>::make_child(const Move& next_move)
+template<class Game, class Move>
+typename std::shared_ptr<Node<Game,Move>>  /* ??? */
+Node<Game,Move>::make_child(const Move& next_move)
 {
   Game next_game(game_state);
   next_game.apply_action(next_move);
-  children.emplace_back(std::make_shared<Node<Game>>(next_game));
+  children.emplace_back(std::make_shared<Node<Game,Move>>(next_game));
   children[children.size()-1]->parent = this;
   erase_move(next_move);
   children[children.size()-1]->last_move = next_move;
   return children[children.size()-1];
 }
 
-template<class Game>
+template<class Game, class Move>
 void
-Node<Game>::erase_move(const Move& next_move)
+Node<Game,Move>::erase_move(const Move& next_move)
 {
   for (auto it = possible_moves.begin(); it!=possible_moves.end(); ++it) {
     if ( *it == next_move)

@@ -13,13 +13,14 @@
 
 // NB! THE LIST OF POSSIBLE MOVES IS NOW A VECTOR OF MOVES, NOT A VECTOR OF POINTERS!!!!!
 
-template<class Game>
+template<class Game, class Move>
+// template<class Game>
 class MonteCarloSearchTree {
 
 public:
 
-  typedef typename Node<Game>::NodePointerType NodePointerType;
-  typedef typename Node<Game>::Move Move;
+  typedef typename Node<Game,Move>::NodePointerType NodePointerType;
+  // typedef typename Node<Game>::Move Move;
 
   /* Methods */
 
@@ -32,6 +33,8 @@ public:
   void back_propagation(const NodePointerType, double);
 
   Move uct_search(void);
+
+  // method to update the pointer to the curret game state
 
   /* Setters */
 
@@ -71,8 +74,8 @@ private:
 
 // Constructors:
 
-template<class Game>
-MonteCarloSearchTree<Game>::MonteCarloSearchTree():
+template<class Game, class Move>
+MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree():
   root(), current_game_node(root)
   {
     set_rand_seed();
@@ -80,16 +83,16 @@ MonteCarloSearchTree<Game>::MonteCarloSearchTree():
     MPI_Initialized( &is_parallel );
   }
 
-template<class Game>
-MonteCarloSearchTree<Game>::MonteCarloSearchTree(int s):
+template<class Game, class Move>
+MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s):
   root(), current_game_node(root),
   seed(s), rng(s)
   {
     MPI_Initialized( &is_parallel );
   }
 
-template<class Game>
-MonteCarloSearchTree<Game>::MonteCarloSearchTree(unsigned oi, unsigned ii, double c):
+template<class Game, class Move>
+MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(unsigned oi, unsigned ii, double c):
   root(), current_game_node(root),
   outer_iter(oi), inner_iter(ii), ucb_constant(c)
   {
@@ -98,8 +101,8 @@ MonteCarloSearchTree<Game>::MonteCarloSearchTree(unsigned oi, unsigned ii, doubl
     MPI_Initialized( &is_parallel );
   }
 
-template<class Game>
-MonteCarloSearchTree<Game>::MonteCarloSearchTree(int s, unsigned oi, unsigned ii, double c):
+template<class Game, class Move>
+MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s, unsigned oi, unsigned ii, double c):
   root(), current_game_node(root),
   seed(s), rng(s), outer_iter(oi), inner_iter(ii), ucb_constant(c)
   {
@@ -108,18 +111,18 @@ MonteCarloSearchTree<Game>::MonteCarloSearchTree(int s, unsigned oi, unsigned ii
 
 // Methods:
 
-template<class Game>
+template<class Game, class Move>
 double
-MonteCarloSearchTree<Game>::compute_ucb(const NodePointerType& target_node) const
+MonteCarloSearchTree<Game,Move>::compute_ucb(const NodePointerType& target_node) const
 {
   return ( target_node->get_wins() / (double)(target_node->get_visits()) ) +
     ucb_constant * sqrt( log( (double)(target_node->get_parent()->get_visits()) )
     / (double)(target_node->get_visits()) );
 }
 
-template<class Game>
-typename Node<Game>::NodePointerType  /* ??? */
-MonteCarloSearchTree<Game>::best_child_ucb(const NodePointerType& target_parent) const
+template<class Game, class Move>
+typename Node<Game,Move>::NodePointerType  /* ??? */
+MonteCarloSearchTree<Game,Move>::best_child_ucb(const NodePointerType& target_parent) const
 {
   std::vector<NodePointerType> children = target_parent->get_children();
   NodePointerType select = nullptr;
@@ -133,9 +136,9 @@ MonteCarloSearchTree<Game>::best_child_ucb(const NodePointerType& target_parent)
   return select;
 }
 
-template<class Game>
-typename Node<Game>::NodePointerType  /* ??? */
-MonteCarloSearchTree<Game>::select() const
+template<class Game, class Move>
+typename Node<Game,Move>::NodePointerType  /* ??? */
+MonteCarloSearchTree<Game,Move>::select() const
 {
   NodePointerType selected_node = current_game_node;
   while( selected_node->all_moves_tried() && selected_node->has_children() )
@@ -143,9 +146,9 @@ MonteCarloSearchTree<Game>::select() const
   return selected_node;
 }
 
-template<class Game>
-typename Node<Game>::NodePointerType  /* ??? */
-MonteCarloSearchTree<Game>::expand(const NodePointerType current_parent)
+template<class Game, class Move>
+typename Node<Game,Move>::NodePointerType  /* ??? */
+MonteCarloSearchTree<Game,Move>::expand(const NodePointerType current_parent)
 {
   NodePointerType expanded_node = nullptr;
   if( !(current_parent->all_moves_tried()) ) {
@@ -167,9 +170,9 @@ MonteCarloSearchTree<Game>::expand(const NodePointerType current_parent)
   }
 }
 
-template<class Game>
+template<class Game, class Move>
 double
-MonteCarloSearchTree<Game>::rollout(const NodePointerType current_leaf) const
+MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf) const
 {
   set_rand_seed();
   double total_score(0.0);
@@ -211,21 +214,21 @@ MonteCarloSearchTree<Game>::rollout(const NodePointerType current_leaf) const
   return total_score;
 }
 
-template<class Game>
+template<class Game, class Move>
 void
-MonteCarloSearchTree<Game>::back_propagation(NodePointerType current_leaf, double score)
+MonteCarloSearchTree<Game,Move>::back_propagation(NodePointerType current_leaf, double score)
 {
   current_leaf->update(score, inner_iter);
-  Node<Game>* temp_ptr = current_leaf.get_parent();
+  Node<Game,Move>* temp_ptr = current_leaf.get_parent();
   while ( temp_ptr!=nullptr ) {
     temp_ptr->update(score, inner_iter);
     temp_ptr = temp_ptr->get_parent();
   }
 }
 
-template<class Game>
-typename Node<Game>::Move             /* ??? */
-MonteCarloSearchTree<Game>::uct_search()
+template<class Game, class Move>
+Move
+MonteCarloSearchTree<Game,Move>::uct_search()
 {
   for (int i = 0; i<outer_iter; ++i) {
     // Select
@@ -235,24 +238,24 @@ MonteCarloSearchTree<Game>::uct_search()
     // MC simulate
     double score = rollout(selected_leaf);
     // Back propagate
-    back_propagation(current_leaf, score);
+    back_propagation(selected_leaf, score);
   }
   // Select best move
   std::vector<NodePointerType> candidate_nodes = current_game_node->get_children();
   // Class node has to store the move where it come from!
-  auto best_node_it = candidate_nodes.begin()
+  auto best_node_it = candidate_nodes.begin();
   for (auto it = candidate_nodes.begin(); it != candidate_nodes.end(); it++) {
-    if ( ( (*it)->get_wins() )/(double)( ()*it)->get_visits() ) >
+    if ( ( (*it)->get_wins() )/(double)( (*it)->get_visits() ) >
       ( (*best_node_it)->get_wins() )/(double)( (*best_node_it)->get_visits() ) ) {
         best_node_it = it;
       }
   }
+  current_game_node = *best_node_it;
   return (*best_node_it)->get_last_move();
-  // Any update ???
 }
 
-template<class Game>
-void MonteCarloSearchTree<Game>::set_rand_seed()
+template<class Game, class Move>
+void MonteCarloSearchTree<Game,Move>::set_rand_seed()
 {
   time_t rawtime;
   struct tm * ptm;
