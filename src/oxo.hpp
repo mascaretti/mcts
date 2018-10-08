@@ -1,64 +1,18 @@
 #ifndef HPP__OXO__HEADER__HPP
 #define HPP__OXO__HEADER__HPP
 
-#include <string>
-#include <vector>
-#include <array>
-#include <utility>
-#include <cassert>
-#include <iostream>
-#include <random>
+#include "game.hpp"
 
 
-namespace game {
+namespace game::Oxo {
 
-/*The following classes are used to throw errors when one occurs*/
-class ActionAlreadyPlayed{}; //to throw an error if the action has been played
-class NoRandomActions{}; //to throw an error if there are no random actions possible?
-class NoActionsLeft{}; //if no actions are left
-class GameNotOver{}; //if the game is not over and we want a utility value
 
-/*
-struct Action
+class Oxo: public Game
 {
-	// The class Action implements the action possible on the board and
-	// defines to constructors
-	int row{0};
-	int column{0};
-
-	Action()= default;
-	Action(std::pair<int, int> input);
-	Action(const int& first, const int& second);
-
-	//for debugging
-	std::string to_string();
-
-};
-
-bool operator==(const Action& lhs, const Action& rhs);
-*/
-
-class Oxo
-{
-	/*The class Oxo implements the usual 3x3 tic-tac-toe board*/
 public:
-	struct Action
-	{
-		/*The class Action implements the action possible on the board and
-		* defines to constructors*/
-		int row{0};
-		int column{0};
+	using Action= game::Oxo::OxoAction;
+	/*The class Oxo implements the usual 3x3 tic-tac-toe board*/
 
-		Action()= default;
-		Action(std::pair<int, int> input);
-		Action(const int& first, const int& second);
-
-		//for debugging
-		std::string to_string();
-
-		bool operator==(const Action& rhs);
-
-	};
 
 private:
 	bool is_terminal{false};
@@ -72,39 +26,197 @@ private:
 	int random_action_seed{0};
 	std::default_random_engine gen;
 
-	void update_terminal_status();
+	void update_terminal_status()  {
+		//check if there is a winner
+		//row-wise
+		for (int j= 0; j != 3; ++j)
+		{
+			int row_sum= board[0][j] + board[1][j] + board[2][j];
+			if (row_sum == 3 or row_sum == -3)
+			{
+				winner_exists= true;
+				is_terminal= true;
+			}
+		}
+
+		//column-wise
+		for (int i= 0; i != 3; ++i)
+		{
+			int col_sum= board[i][0] + board[i][1] + board[i][2];
+			if (col_sum == 3 or col_sum == -3)
+			{
+				winner_exists= true;
+				is_terminal= true;
+			}
+		}
+
+		//diagonals
+		int first_diag_sum= board[0][0] + board[1][1] + board[2][2];
+		if (first_diag_sum == 3 or first_diag_sum == -3)
+			{
+				winner_exists= true;
+				is_terminal= true;
+			}
 
 
-	char print_helper(int value);
+		int second_diag_sum= board[0][2] + board[1][1] + board[2][0];
+		if (second_diag_sum == 3 or second_diag_sum == -3)
+			{
+				winner_exists= true;
+				is_terminal= true;
+			}
+
+
+		//checking if there are any actions left
+		bool zeros_left{false};
+		for (int i= 0; i != 3; ++i) {
+			for (int j= 0; j != 3; ++j)
+			{
+				if (board[i][j] == 0)
+					zeros_left= true;
+			}
+		}
+
+		if (zeros_left == false)
+			is_terminal= true;
+	};
+
+
+	char print_helper(int value) {
+		char tmp;
+		if (value == 0)
+			tmp= ' ';
+
+		if (value == 1)
+			tmp= 'x';
+
+		if (value == -1)
+			tmp= 'o';
+	return tmp;
+	};
 
 public:
 
-	Oxo();
-	Oxo(int seed);
+	Oxo() {
+		board[0]= {{0, 0, 0}};
+		board[1]= {{0, 0, 0}};
+		board[2]= {{0, 0, 0}};
+		};
+
+
+	Oxo(int seed): random_action_seed{seed}, gen{seed}  {
+		board[0]= {{0, 0, 0}};
+		board[1]= {{0, 0, 0}};
+		board[2]= {{0, 0, 0}};
+	}
+
 	Oxo(const Oxo& other)= default;
+
 	Oxo& operator=(const Oxo& other)= default;
 
-	bool get_terminal_status(); //true if current state is terminal
+	bool get_terminal_status() override {
+		return is_terminal;
+	}; //true if current state is terminal
 
-	int get_agent_id(); //returns the agent who is about to make a decision
+	int get_agent_id() override {
+		return agent_id;
+	}; //returns the agent who is about to make a decision
 
-	void apply_action(const Action& action); //returns void, but changes the internal state
+	void apply_action(const Action& action) override {
+		//Checking if the action has not been played before
+		if (board[action.row][action.column] != 0)
+			throw ActionAlreadyPlayed{};
 
-	std::vector<Action> get_actions() const; //returns a vector of legal action at current state
 
-	Action random_action(); //returns a random action legal at the current state;
+		//Action has effect depending on whose turn it is
+		if (agent_id == 1)
+			board[action.row][action.column]= 1;
 
-	int evaluate(); //returns the utility as an integer if state is terminal, otherwise throws error
+		else
+			board[action.row][action.column]= -1;
 
-	void print_board(); //print the value as string
+		//control if terminal
+		update_terminal_status();
 
-	void set_seed(int new_seed); //sets new seed
+
+		//Changing the agent_id
+		agent_id= ((agent_id == 1) ? 2 : 1);
+
+		//setting the action the brought here
+		last_action= action;
+
+	}; //returns void, but changes the internal state
+
+	std::vector<Action> get_actions() const override {
+
+		//check if actions available
+		if (is_terminal == true)
+			throw NoActionsLeft{};
+
+		std::vector<Action> action_vector;
+		for (int i= 0; i != 3; ++i) {
+			for (int j= 0; j != 3; ++j) {
+				if (board[i][j] == 0)
+					action_vector.emplace_back(std::make_pair(i, j));
+			}
+		}
+
+		return action_vector;
+	}; //returns a vector of legal action at current state
+
+	Action random_action() override {
+		if (is_terminal == true)
+			throw NoRandomActions{};
+
+		//std::random_device rd;
+		//std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with random_action_seed
+		int max_actions= get_actions().size() - 1;
+    	std::uniform_int_distribution<int> dis(0, max_actions);
+
+    	int random_index= dis(gen);
+
+   		return get_actions()[random_index];
+	}; //returns a random action legal at the current state
+
+	int evaluate() override {
+		if ((is_terminal == false) and (winner_exists == false))
+			throw GameNotOver{};
+		if ((is_terminal == true) and (winner_exists == false))
+			return 0;
+		else
+			return (agent_id == 1) ? -1 : 1;
+	}; //returns the utility as an integer if state is terminal, otherwise throws error
+
+	void print_board() {
+		std::cout << print_helper(board[0][0]) << " | " << print_helper(board[0][1]) << " | " << print_helper(board[0][2]) << '\n';
+		std::cout << "---------" << '\n';
+		std::cout << print_helper(board[1][0]) << " | " << print_helper(board[1][1]) << " | " << print_helper(board[1][2]) << '\n';
+		std::cout << "---------" << '\n';
+		std::cout << print_helper(board[2][0]) << " | " << print_helper(board[2][1]) << " | " << print_helper(board[2][2]) << '\n';
+	}; //print the value as string
+
+	void set_seed(int new_seed) override {
+		random_action_seed= new_seed;
+		gen.seed(random_action_seed);
+	}; //sets new seed
 
 	//for debugging
-	void print();
+	void print() {
+		std::cout << "**************************************" << '\n';
+		std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
+		std::cout << "It plays: " << get_last_action().to_string() << '\n';
+		std::cout << "Game finished? " << get_terminal_status() << '\n';
+		if (get_terminal_status() == true)
+			std::cout << "Outcome: " << evaluate() << '\n';
+		else
+			std::cout << "Now up to: " << get_agent_id() << '\n';
+		std::cout << "**************************************" << '\n';
+	};
 
 	//for debugging
-	Action get_last_action() const;
+	Action get_last_action() const {
+		return last_action;
+	};
 };
 
 }

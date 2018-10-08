@@ -2,7 +2,7 @@ CXX = g++
 CC = g++
 CXXFLAGS = -Wall -std=c++14
 LDLFLAGS = -Wall -std=c++14
-SRCS = main.cpp ../../src/oxo.cpp
+SRCS = main.cpp ../../src/action.cpp
 OBJS = $(SRCS:.cpp=.o)
 HEADERS = $(wildcard *.hpp)
 EXEC = main

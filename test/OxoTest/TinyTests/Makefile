@@ -2,7 +2,7 @@ CXX = clang++
 CC = clang++
 CXXFLAGS = -Wall -std=c++14
 LDLFLAGS = -Wall -std=c++14
-SRCS = random_moves.cpp ../../../src/oxo.cpp
+SRCS = random_moves.cpp ../../../src/action.cpp
 OBJS = $(SRCS:.cpp=.o)
 HEADERS = $(wildcard *.hpp)
 EXEC = random_moves
