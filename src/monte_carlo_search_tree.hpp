@@ -5,6 +5,7 @@
 #include <random>
 #include <mpi.h>
 #include <ctime>
+#include <algorithm>
 
 
 /* - - - - - - - - - - - - - - - - - */
@@ -35,6 +36,7 @@ public:
   Move uct_search(void);
 
   // method to update the pointer to the curret game state
+  void change_current_status(const Move&);
 
   /* Setters */
 
@@ -252,6 +254,25 @@ MonteCarloSearchTree<Game,Move>::uct_search()
   }
   current_game_node = *best_node_it;
   return (*best_node_it)->get_last_move();
+}
+
+template<class Game, class Move>
+void
+MonteCarloSearchTree<Game,Move>::change_current_status(const Move& opponent_move)
+{
+  auto it_out = std::find( (current_game_node->get_moves()).begin(), (current_game_node->get_moves().end()) );
+  if( it_out == (current_game_node->get_moves().end()) ) {
+    std::vector<NodePointerType> possible_opponenet_moves = current_game_node->get_children();
+    for (auto it_in = possible_opponenet_moves.begin(); it_in != possible_opponenet_moves.end(); ++it_in) {
+      if ( (*it_in)->get_last_move()==opponent_move ) {
+        current_game_node = *it_in;
+        return;
+      }
+    }
+  }
+  else {
+    current_game_node = current_game_node.make_child(opponent_move);
+  }
 }
 
 template<class Game, class Move>

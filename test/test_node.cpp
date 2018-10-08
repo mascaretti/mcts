@@ -6,6 +6,8 @@
 
 int main() {
 
+// Change the blow calls to include the 2 template arg.
+
 /*
 
 Node<game::Oxo> myNode;
