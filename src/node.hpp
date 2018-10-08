@@ -17,7 +17,6 @@ public:
 
   typedef typename Game::Action Move;
   typedef typename std::shared_ptr< Node<Game> > NodePointerType;
-  // typedef typename std::shared_ptr< Move > MovePointerType;
 
   /* Costructors */
 
@@ -47,6 +46,7 @@ public:
   std::vector< Move > get_moves(void) const { return possible_moves; }
   Game get_game(void) const { return game_state; }
   int get_player(void) const { return player; }
+  Move get_last_move(void) const { return last_move; }
 
   /* Destructor */
   ~Node() = default;
@@ -55,9 +55,10 @@ private:
 
   Game game_state;
   Node* parent;
+  Move last_move;     // Which method has to be modified? Can it stay undefined?
+                      // Should define a null move? Should we specify is it's a starting config?
 
   std::vector< NodePointerType > children;
-  // std::vector< MovePointerType > possible_moves;
   std::vector< Move > possible_moves;
   void erase_move(const Move&);
 
@@ -130,6 +131,7 @@ Node<Game>::make_child(const Move& next_move)
   children.emplace_back(std::make_shared<Node<Game>>(next_game));
   children[children.size()-1]->parent = this;
   erase_move(next_move);
+  children[children.size()-1]->last_move = next_move;
   return children[children.size()-1];
 }
 
