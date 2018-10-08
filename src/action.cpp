@@ -2,17 +2,29 @@
 #include "action.hpp"
 #include <iostream>
 
-Action::Action(std::pair<int, int> input): row{input.first}, column{input.second} {};
+namespace game {
+namespace Oxo {
 
-Action::Action(const int& first, const int& second): row{first}, column{second} {};
+	OxoAction::OxoAction(std::pair<int, int> input): row{input.first}, column{input.second} {};
 
-std::string to_string() {
-	std::cout << "(" << row << "," << column << ")" << std::endl;
-};
+	OxoAction::OxoAction(const int& first, const int& second): row{first}, column{second} {};
 
-bool operator==(const Action& rhs) override {
-	if ((row == rhs.row) and (column == rhs.column))
-		return true;
-	else
-		return false;
-};
+	std::string OxoAction::to_string() {
+		std::string data;
+		data.append("(");
+		data.append(std::to_string(row));
+		data.append(",");
+		data.append(std::to_string(column));
+		data.append(")");
+		return data;
+	};
+
+	bool OxoAction::operator==(const OxoAction& rhs) {
+		if ((row == rhs.row) and (column == rhs.column))
+			return true;
+		else
+			return false;
+	};
+
+}
+}

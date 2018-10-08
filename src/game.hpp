@@ -22,19 +22,19 @@ namespace game {
 		/*The class Game implements the interface of game*/
 	public:
 
-		virtual bool get_terminal_status(); //true if current state is terminal
+		virtual bool get_terminal_status()= 0; //true if current state is terminal
 
-		virtual int get_agent_id(); //returns the agent who is about to make a decision
+		virtual int get_agent_id()= 0; //returns the agent who is about to make a decision
 
-		virtual void apply_action(const Action& action); //returns void, but changes the internal state
+		virtual void apply_action(const Action& action)= 0; //returns void, but changes the internal state
 
-		virtual std::vector<Action> get_actions() const; //returns a vector of legal action at current state
+		virtual std::vector<Action> get_actions() const = 0 ; //returns a vector of legal action at current state
 
-		virtual Action random_action(); //returns a random action legal at the current state
+		virtual Action random_action()= 0; //returns a random action legal at the current state
 
-		virtual int evaluate(); //returns the utility as an integer if state is terminal, otherwise throws error
+		virtual int evaluate()= 0; //returns the utility as an integer if state is terminal, otherwise throws error
 
-		virtual void set_seed(int new_seed); //sets new seed
+		virtual void set_seed(int new_seed)= 0; //sets new seed
 	};
 }
 

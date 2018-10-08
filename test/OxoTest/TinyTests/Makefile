@@ -4,7 +4,7 @@ CXXFLAGS = -Wall -std=c++14
 LDLFLAGS = -Wall -std=c++14
 SRCS = random_moves.cpp ../../../src/action.cpp
 OBJS = $(SRCS:.cpp=.o)
-HEADERS = $(wildcard *.hpp)
+HEADERS = ../../../src/action.hpp ../../../src/game.hpp ../../../src/oxo.hpp
 EXEC = random_moves
 .PHONY = all clean distclean
 
