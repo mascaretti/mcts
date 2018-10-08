@@ -1,9 +1,11 @@
 #include "../../../src/oxo.hpp"
+#include "../../../src/game.hpp"
+#include "../../../src/action.hpp"
 
 int main(int argc, char const *argv[])
 {
-	game::Oxo new_game{19};
-	game::Oxo::Action new_action;
+	game::Oxo::OxoGame new_game{19};
+	game::Oxo::OxoAction new_action;
 
 	do {
 		new_action= new_game.random_action();

@@ -1,10 +1,10 @@
-CXX = g++
-CC = g++
+CXX = clang++
+CC = clang++
 CXXFLAGS = -Wall -std=c++14
 LDLFLAGS = -Wall -std=c++14
-SRCS = main.cpp ../../src/oxo.cpp
+SRCS = main.cpp ../../src/action.cpp
 OBJS = $(SRCS:.cpp=.o)
-HEADERS = $(wildcard *.hpp)
+HEADERS = ../../src/action.hpp ../../src/game.hpp ../../src/oxo.hpp
 EXEC = main
 .PHONY = all clean distclean
 all: $(EXEC)
