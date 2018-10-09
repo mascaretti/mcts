@@ -1,6 +1,6 @@
 //#include "../../src/game.hpp"
-#include "../../src/oxo.hpp"
-#include "../../src/action.hpp"
+#include "../../../src/oxo.hpp"
+#include "../../../src/action.hpp"
 
 
 int main(int argc, char const *argv[])

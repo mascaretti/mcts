@@ -16,6 +16,7 @@ namespace game {
 	class NoRandomActions{}; //to throw an error if there are no random actions possible?
 	class NoActionsLeft{}; //if no actions are left
 	class GameNotOver{}; //if the game is not over and we want a utility value
+	class IllegalAction{}; //if the action is not legal
 
 	template <class Action>
 	class Game {

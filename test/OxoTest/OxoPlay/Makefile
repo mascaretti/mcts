@@ -2,12 +2,11 @@ CXX = clang++
 CC = clang++
 CXXFLAGS = -Wall -std=c++14
 LDLFLAGS = -Wall -std=c++14
-SRCS = random_moves.cpp ../../../src/action.cpp
+SRCS = main.cpp ../../../src/action.cpp
 OBJS = $(SRCS:.cpp=.o)
-HEADERS = ../../../src/action.hpp ../../../src/game.hpp ../../../src/oxo.hpp
-EXEC = random_moves
+HEADERS = ../../src/action.hpp ../../../src/game.hpp ../../../src/oxo.hpp
+EXEC = main.out
 .PHONY = all clean distclean
-
 all: $(EXEC)
 
 clean:
