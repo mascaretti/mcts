@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <cmath>
+#include <iostream>
 
 
 /* - - - - - - - - - - - - - - - - - */
@@ -38,6 +39,7 @@ public:
   bool all_moves_tried(void) const;
   bool has_children(void) const;
   NodePointerType make_child(const Move&);
+  void print_node(void) const;
 
   /* Getters */
 
@@ -146,6 +148,16 @@ Node<Game,Move>::erase_move(const Move& next_move)
     if ( *it == next_move)
       possible_moves.erase(it);
   }
+}
+
+template<class Game, class Move>
+void
+Node<Game,Move>::print_node() const {
+  std::cout << "Player: " << player <<
+    " | W/V: " << wins << "/" << visits <<
+    " #child: " << children.size() <<
+    " #moves: " << possible_moves.size()
+  << std::endl;
 }
 
 
