@@ -10,7 +10,7 @@ namespace game {
 
 		OxoAction::OxoAction(const int& first, const int& second): row{first}, column{second} {};
 
-		std::string OxoAction::to_string() {
+		std::string OxoAction::to_string() const {
 			std::string data;
 			data.append("(");
 			data.append(std::to_string(row));
@@ -20,7 +20,7 @@ namespace game {
 			return data;
 		};
 
-		bool OxoAction::operator==(const OxoAction& rhs) {
+		bool OxoAction::operator==(const OxoAction& rhs) const {
 			if ((row == rhs.row) and (column == rhs.column))
 				return true;
 			else
@@ -38,7 +38,7 @@ namespace game {
 			assert(number > 0);
 		};
 
-		std::string NimAction::to_string() {
+		std::string NimAction::to_string() const {
 			std::string data;
 			data.append("(");
 			data.append(std::to_string(pile));
@@ -48,7 +48,7 @@ namespace game {
 			return data;
 		};
 
-		bool NimAction::operator==(const NimAction& rhs) {
+		bool NimAction::operator==(const NimAction& rhs) const {
 			if ((pile == rhs.pile) and (number == rhs.number))
 				return true;
 			else

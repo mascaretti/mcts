@@ -47,12 +47,18 @@ public:
   void set_ucb_constant(double c) { ucb_constant = c; }
 
   /* Constructors: do a little refactoring! Need also a game to be passed as arg. */
+  /*
   MonteCarloSearchTree();
   MonteCarloSearchTree(int);
+  */
+  MonteCarloSearchTree(unsigned, unsigned);
   MonteCarloSearchTree(unsigned, unsigned, double);
   MonteCarloSearchTree(int, unsigned, unsigned, double);
 
   /* Otherwise: default (for now... we would really need a copy constr/assign for deep copy) */
+
+  /* Methods for debug */
+  void print_current_status_info(void) const;
 
 private:
 
@@ -64,8 +70,8 @@ private:
   std::default_random_engine rng;
   void set_rand_seed(void);
 
-  unsigned outer_iter = 1000;
-  unsigned inner_iter = 100;
+  unsigned outer_iter = 1;
+  unsigned inner_iter = 1;
 
   double ucb_constant = sqrt(2.0);
 
@@ -81,6 +87,7 @@ private:
 // Constructors:  TO BE REVIEWED!
 // *************
 
+/*
 template<class Game, class Move>
 MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree():
   root(), current_game_node(root)
@@ -97,6 +104,19 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s):
   root(), current_game_node(root),
   seed(s), rng(s)
   {
+    MPI_Initialized( &is_parallel );
+    root = std::make_shared< Node<Game, Move> >();
+    current_game_node = root;
+  }
+*/
+
+template<class Game, class Move>
+MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(unsigned oi, unsigned ii):
+  root(), current_game_node(root),
+  outer_iter(oi), inner_iter(ii)
+  {
+    set_rand_seed();
+    rng.seed(seed);
     MPI_Initialized( &is_parallel );
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
@@ -137,6 +157,7 @@ MonteCarloSearchTree<Game,Move>::compute_ucb(const NodePointerType& target_node)
     / (double)(target_node->get_visits()) );
 }
 
+// THIS IS INCOMPLETE, ISN'T IT?
 template<class Game, class Move>
 typename Node<Game,Move>::NodePointerType  /* ??? */
 MonteCarloSearchTree<Game,Move>::best_child_ucb(const NodePointerType& target_parent) const
@@ -171,7 +192,7 @@ MonteCarloSearchTree<Game,Move>::expand(const NodePointerType current_parent)
   // If there are still moves that have not been tried:
   if( !(current_parent->all_moves_tried()) ) {
     // DEBUG
-    std::cout << "I can expand, and I will!" << std::endl;
+    // std::cout << "I can expand, and I will!" << std::endl;
     std::vector<Move> available_moves = current_parent->get_moves();
     std::size_t tot_moves = available_moves.size();
     std::uniform_int_distribution<> choose(0, tot_moves-1);
@@ -212,7 +233,7 @@ MonteCarloSearchTree<Game,Move>::expand(const NodePointerType current_parent)
   */
   else {
     // DEBUG
-    std::cout << "Alas, I can't expand..." << std::endl;
+    // std::cout << "Alas, I can't expand..." << std::endl;
     return current_parent;
   }
 }
@@ -237,7 +258,7 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf) con
     for (unsigned i = 0; i<local_iter; ++i) {
       Game temp_game = current_leaf->get_game();
       temp_game.set_seed(seed);
-      while ( temp_game.get_terminal_status() )
+      while ( !temp_game.get_terminal_status() )
         temp_game.apply_action(temp_game.random_action());
       double result = (double)temp_game.evaluate();
       result = result*(temp_game.get_agent_id()==current_leaf->get_player()) -
@@ -313,21 +334,23 @@ MonteCarloSearchTree<Game,Move>::uct_search()
   }
   current_game_node = *best_node_it;
   // DEBUG
-  current_game_node->print_node();
+  // current_game_node->print_node();
   return (*best_node_it)->get_last_move();
 }
 
+// HERE WE HAVE ONE OF THE PROBLEMS...
 template<class Game, class Move>
 void
 MonteCarloSearchTree<Game,Move>::change_current_status(const Move& opponent_move)
 {
-  auto it_out = std::find( (current_game_node->get_moves()).begin(), (current_game_node->get_moves().end()), opponent_move );
+  std::vector<Move> possible_opponent_moves = current_game_node->get_moves();
+  auto it_out = std::find( possible_opponent_moves.cbegin(), possible_opponent_moves.cend(), opponent_move );
   if( it_out == (current_game_node->get_moves().end()) ) {
     // DEBUG
-    // std::cout << "Ah ah! I predicted my opponent..." << std::endl;
-    std::vector<NodePointerType> possible_opponent_moves = current_game_node->get_children();
-    for (auto it_in = possible_opponent_moves.begin(); it_in != possible_opponent_moves.end(); ++it_in) {
-      if ( (*it_in)->get_last_move()==opponent_move ) {
+    std::cout << "Ah ah! I predicted my opponent..." << std::endl;
+    std::vector<NodePointerType> possible_opponent_games = current_game_node->get_children();
+    for (auto it_in = possible_opponent_games.cbegin(); it_in != possible_opponent_games.cend(); ++it_in) {
+      if ( (*it_in)->get_last_move() == opponent_move ) {
         current_game_node = *it_in;
         return;
       }
@@ -335,7 +358,7 @@ MonteCarloSearchTree<Game,Move>::change_current_status(const Move& opponent_move
   }
   else {
     // DEBUG
-    // std::cout << "Oh nous! I couldn't predict this move..." << std::endl;
+    std::cout << "Oh nous! I couldn't predict this move..." << std::endl;
     current_game_node = current_game_node->make_child(opponent_move);
   }
 }
@@ -356,6 +379,18 @@ void MonteCarloSearchTree<Game,Move>::set_rand_seed()
   }
   else
     seed = ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000;
+}
+
+// DEBUG
+template<class Game, class Move>
+void MonteCarloSearchTree<Game,Move>::print_current_status_info() const {
+  current_game_node->print_node();
+  std::cout << "Moves left: ";
+  for( auto it = (current_game_node->get_moves()).cbegin(); it!=(current_game_node->get_moves()).cend(); it++ )
+    std::cout << (*it).to_string() << " ";
+  std::cout << std::endl;
+  Game tmp = current_game_node->get_game();
+  tmp.print_board();
 }
 
 #endif /* MONTE_CARLO_SEARCH_TREE */

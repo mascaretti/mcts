@@ -25,9 +25,10 @@ namespace game {
 			OxoAction(const int& first, const int& second);
 
 			//for debugging
-			std::string to_string();
+			std::string to_string() const;
 
-			bool operator==(const OxoAction& rhs);
+			bool operator==(const OxoAction& rhs) const;
+
 		};
 
 	}
@@ -44,13 +45,11 @@ namespace game {
 			NimAction(const unsigned int& where, const unsigned int& what);
 
 			//for debugging
-			std::string to_string();
+			std::string to_string() const;
 
-			bool operator==(const NimAction& rhs);
+			bool operator==(const NimAction& rhs) const;
 		};
 	}
 }
 
 #endif
-
-

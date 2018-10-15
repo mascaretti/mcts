@@ -148,8 +148,10 @@ namespace game {
 			virtual std::vector<Action> get_actions() const override {
 
 				//check if actions available
+				/*
 				if (is_terminal == true)
 					throw NoActionsLeft{};
+				*/
 
 				std::vector<Action> action_vector;
 				for (int i= 0; i != 3; ++i) {
@@ -198,7 +200,7 @@ namespace game {
 				gen.seed(random_action_seed);
 			}; //sets new seed
 
-			
+
 			void print() {
 				std::cout << "**************************************" << '\n';
 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
@@ -211,7 +213,7 @@ namespace game {
 				std::cout << "**************************************" << '\n';
 			}; //for debugging
 
-			
+
 			Action get_last_action() const {
 				return last_action;
 			}; //for debugging

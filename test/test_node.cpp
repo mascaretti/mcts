@@ -24,7 +24,10 @@ myNode.has_children() ? str = "Yes" : str = "No";
 std::cout << "Has children? " << str << std::endl;
 Oxo myGame = myNode.get_game();
 
-Move myMove = myGame.random_action();
+myNode.print_node();
+
+Move myMove = myGame.random_action();   // Why is it always the very same action ?????
+std::cout << "Selected move: " << myMove.to_string() << std::endl;
 myNode.make_child(myMove);
 myNode.has_children() ? str = "Yes" : str = "No";
 std::cout << "Move made; has children? " << str << std::endl;
@@ -36,6 +39,9 @@ Node<Oxo, Move>* parent_ptr = children_ptrs[0]->get_parent();
 std::vector< Move > left_moves = children_ptrs[0]->get_moves();
 std::cout << "Parent has " << wins << " score" << std::endl;
 std::cout << "Parent has been visited " << visits << " times" << std::endl;
+
+myNode.print_node();
+children_ptrs[0]->print_node();
 
 return 0;
 

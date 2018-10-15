@@ -145,8 +145,10 @@ void
 Node<Game,Move>::erase_move(const Move& next_move)
 {
   for (auto it = possible_moves.begin(); it!=possible_moves.end(); ++it) {
-    if ( *it == next_move)
+    if ( (*it) == next_move) {
       possible_moves.erase(it);
+      return;
+    }
   }
 }
 
@@ -158,6 +160,12 @@ Node<Game,Move>::print_node() const {
     " #child: " << children.size() <<
     " #moves: " << possible_moves.size()
   << std::endl;
+  // DEBUG
+  /*
+  for( auto it = possible_moves.cbegin(); it!=possible_moves.cend(); it++ )
+    std::cout << (*it).to_string() << " ";
+  std::cout << std::endl;
+  */
 }
 
 

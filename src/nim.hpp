@@ -1,5 +1,5 @@
 #ifndef HPP__NIM__HEADER__HPP
-#define HPP__NIM__HEADER__HPP 
+#define HPP__NIM__HEADER__HPP
 
 #include "action.hpp"
 #include "game.hpp"
@@ -71,8 +71,10 @@ namespace game {
 			virtual std::vector<Action> get_actions() const override {
 
 				//check if actions available
+				/*
 				if (is_terminal == true)
 					throw NoActionsLeft{};
+				*/
 
 				std::vector<Action> action_vector;
 				for (unsigned int position{0u}; position != 3; ++position) {
@@ -122,7 +124,7 @@ namespace game {
 				std::cout << "**************************************" << '\n';
 			}; //for debugging
 
-			
+
 			Action get_last_action() const {
 				return last_action;
 			}; //for debugging
