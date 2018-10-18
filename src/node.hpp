@@ -17,8 +17,6 @@ class Node {
 
 public:
 
-  // typedef typename Game::Action Move;
-  // typedef typename std::shared_ptr< Node<Game> > NodePointerType;
   typedef typename std::shared_ptr< Node<Game,Move> > NodePointerType;
 
   /* Costructors */
@@ -29,7 +27,6 @@ public:
 
   /* Copy-assigment */
 
-  // Node<Game>& operator = (const Node<Game>&) = default;
   Node<Game,Move>& operator = (const Node<Game,Move>&) = default;
 
   /* Methods */
@@ -160,13 +157,6 @@ Node<Game,Move>::print_node() const {
     " #child: " << children.size() <<
     " #moves: " << possible_moves.size()
   << std::endl;
-  // DEBUG
-  /*
-  for( auto it = possible_moves.cbegin(); it!=possible_moves.cend(); it++ )
-    std::cout << (*it).to_string() << " ";
-  std::cout << std::endl;
-  */
 }
-
 
 #endif /* NODE_HPP */
