@@ -1,5 +1,5 @@
-#include "../src/monte_carlo_search_tree.hpp"
-#include "../src/oxo.hpp"
+#include "../../src/monte_carlo_search_tree.hpp"
+#include "../../src/oxo.hpp"
 
 int main() {
 
@@ -7,10 +7,10 @@ int main() {
 using Oxo = game::Oxo::OxoGame;
 using Move = game::Oxo::OxoAction;
 
-int outer_it1 = 1000, inner_it1 = 1000;
-int outer_it2 = 1, inner_it2 = 1;
+int outer_it1 = 1, inner_it1 = 1;
+int outer_it2 = 100, inner_it2 = 100;
 
-// MPI_Init(nullptr, nullptr);
+MPI_Init(nullptr, nullptr);
 
 Oxo oxo_board;
 Move current_player_move;
@@ -46,7 +46,7 @@ while( !oxo_board.get_terminal_status() ) {
   std::cout << std::endl;
 }
 
-// MPI_Finalize();
+MPI_Finalize();
 
 return 0;
 

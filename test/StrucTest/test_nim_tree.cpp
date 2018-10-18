@@ -1,5 +1,5 @@
-#include "../src/monte_carlo_search_tree.hpp"
-#include "../src/nim.hpp"
+#include "../../src/monte_carlo_search_tree.hpp"
+#include "../../src/nim.hpp"
 
 int main() {
 

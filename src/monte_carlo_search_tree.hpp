@@ -24,17 +24,9 @@ public:
 
   /* Methods */
 
-  double compute_ucb(const NodePointerType&) const;
-  NodePointerType best_child_ucb(const NodePointerType&) const;
-
-  NodePointerType select(void) const;
-  NodePointerType expand(const NodePointerType);
-  double rollout(const NodePointerType) const;
-  void back_propagation(const NodePointerType, double);
-
   Move uct_search(void);
 
-  // method to update the pointer to the curret game state
+  // Method to update the pointer to the curret game state
   void change_current_status(const Move&);
 
   /* Setters */
@@ -52,11 +44,22 @@ public:
 
   /* For now */
   MonteCarloSearchTree& operator = (const MonteCarloSearchTree&) = delete;
+  MonteCarloSearchTree(const MonteCarloSearchTree&) = delete;
 
   /* Methods for debug */
   void print_current_status_info(void) const;
 
 private:
+
+  /* Methods */
+
+  double compute_ucb(const NodePointerType&) const;
+  NodePointerType best_child_ucb(const NodePointerType&) const;
+
+  NodePointerType select(void) const;
+  NodePointerType expand(const NodePointerType);
+  double rollout(const NodePointerType) const;
+  void back_propagation(const NodePointerType, double);
 
   NodePointerType root;
   NodePointerType current_game_node;
@@ -193,28 +196,23 @@ MonteCarloSearchTree<Game,Move>::expand(const NodePointerType current_parent)
       idx = choose(rng);
     return current_parent->make_child(available_moves[idx]);
   }
-  // This does not work in case the 'parent' is a leaf...
-  /*
-  else {
+  // If all moves have been tried and it's not a leaf
+  else if ( current_parent->has_children() ) {
     std::vector<NodePointerType> available_children = current_parent->get_children();
     std::size_t tot_moves = available_children.size();
     std::uniform_int_distribution<> choose(0, tot_moves-1);
     int idx = 0;
     if ( is_parallel ) {
-      // MPI_Init(nullptr, nullptr);
       int rank;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       if (rank==0) idx = choose(rng);
       MPI_Bcast(&idx, 1, MPI_INT, 0, MPI_COMM_WORLD);
-      // MPI_Finalize();
     }
     else
       idx = choose(rng);
-    expanded_node = available_children[idx];
-    return expanded_node;
+    return available_children[idx];
   }
-  */
-  // Else, if all moves have been tried:
+  // If it is a leaf
   else {
     return current_parent;
   }
@@ -239,8 +237,8 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf) con
       while ( !temp_game.get_terminal_status() )
         temp_game.apply_action(temp_game.random_action());
       double result = (double)temp_game.evaluate();
-      result = result*(temp_game.get_agent_id()==current_leaf->get_player()) -
-        result*(temp_game.get_agent_id()!=current_leaf->get_player()) +
+      result = result * ( current_game_node->get_player()==1 ) -
+        result * ( current_game_node->get_player()==2 ) +
         0.5*(result==0);
       total_score += result;
     }
@@ -253,14 +251,9 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf) con
       while ( !temp_game.get_terminal_status() )
         temp_game.apply_action( temp_game.random_action() );
       double result = (double)temp_game.evaluate();
-      /*
-      result = result * ( temp_game.get_agent_id()==current_leaf->get_player() ) -
-        result * ( temp_game.get_agent_id()!=current_leaf->get_player() ) +
-        0.5*( result==0 );
-      */
-      result = result * ( current_leaf->get_player()==1 ) -
-        result * ( current_leaf->get_player()==2 ) +
-        0.5*( result==0 );
+      result = result * ( current_game_node->get_player()==1 ) -
+        result * ( current_game_node->get_player()==2 ) +
+        0.5*(result==0);
       total_score += result;
     }
   }
