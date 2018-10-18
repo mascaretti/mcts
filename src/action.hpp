@@ -5,10 +5,7 @@
 #include <string>
 #include <cassert>
 
-class Action {
-public:
-	bool operator==(const Action& rhs);
-};
+class Action {};
 
 namespace game {
 	namespace Oxo {
