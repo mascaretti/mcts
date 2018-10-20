@@ -10,6 +10,10 @@ setwd("~/PACS/apc")
 #Reading the dataset
 results <- read_csv("./test/data_games.csv", col_names = TRUE)
 
+#setting default values for printing plots
+def_width <- 10
+def_height <- 10
+
 #NIM----------------------------------------
 #Creating the Nim dataset
 nim <- results %>%
@@ -32,7 +36,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Nim")
 
 #Save plot
-#ggsave("./test/analysis/nim_01.png", width = 5, height = 5)
+#ggsave("./test/analysis/nim_01.png", width = def_width, height = def_height)
 
 nim %>%
   filter(PLAYER == 1) %>%
@@ -43,7 +47,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Performance increase of Player 1 at Nim")
 
 #Save plot
-#ggsave("./test/analysis/nim_01_pi.png", width = 5, height = 5)
+#ggsave("./test/analysis/nim_01_pi.png", width = def_width, height = def_height)
 
 
 
@@ -57,7 +61,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Nim")
 
 #Save plot
-#ggsave("./test/analysis/nim_02.png", width = 5, height = 5)
+#ggsave("./test/analysis/nim_02.png", width = def_width, height = def_height)
 
 nim %>%
   filter(PLAYER == 2) %>%
@@ -65,10 +69,10 @@ nim %>%
   ggplot() +
   geom_col(mapping = aes(x = IN_ITER, y = PERF_INCR)) +
   facet_wrap(~ OUT_ITER, labeller = label_both) +
-  labs(x = "Number of roll-outs", y = "Number of wins", title = "Performance increase of Player 1 at Nim")
+  labs(x = "Number of roll-outs", y = "Number of wins", title = "Performance increase of Player 2 at Nim")
 
 #Save plot
-#ggsave("./test/analysis/nim_02_pi.png", width = 5, height = 5)
+#ggsave("./test/analysis/nim_02_pi.png", width = def_width, height = def_height)
 
 
 #Checking if the number of wins changes
@@ -83,7 +87,7 @@ nim %>%
   labs(title = "Boxplot of the number of wins at Nim according to the player")
 
 #Save plot
-ggsave("./test/analysis/nim_boxplot.png", width = 10, height = 10)
+ggsave("./test/analysis/nim_boxplot.png", width = def_width, height = def_height)
 
 #OXO-------------------------------
 
@@ -99,7 +103,7 @@ oxo_ran_victories <- results %>%
   mutate(N_LOSS = N_MATCH - (N_WIN + N_DRAW)) %>%
   select(c(N_WIN, N_DRAW, N_LOSS))
 
-#Checking if the number of wins changes
+#Checking if the number of wins/draws changes
 #considering the different players
 oxo %>%
   mutate(PLAYER = as.character(PLAYER)) %>%
@@ -111,7 +115,7 @@ oxo %>%
   labs(title = "Boxplot of the number of wins at Tic-tac-toe according to the player")
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_draws.png", width = 10, height = 10)
+#ggsave("./test/analysis/oxo_boxplot_draws.png", width = def_width, height = def_height)
 
 
 oxo %>%
@@ -124,7 +128,7 @@ oxo %>%
   labs(title = "Boxplot of the number of draws at Tic-tac-toe according to the player")
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_draws.png", width = 10, height = 10)
+#ggsave("./test/analysis/oxo_boxplot_draws.png", width = def_width, height = def_height)
 
 #Plotting for the first Oxo player
 oxo %>%
@@ -136,7 +140,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Tic-tac-toe")
 
 #Saving the plot
-#ggsave("./test/analysis/oxo_win_01.png", width = 5, height = 5)
+#ggsave("./test/analysis/oxo_win_01.png", width = def_width, height = def_height)
 
 #draws
 oxo %>%
@@ -148,7 +152,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Tic-tac-toe")
 
 #Saving the plot
-#ggsave("./test/analysis/oxo_draw_01.png", width = 5, height = 5)
+#ggsave("./test/analysis/oxo_draw_01.png", width = def_width, height = def_height)
 
 
 #Plotting for the second Oxo player
@@ -161,7 +165,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_win_02.png", width = 5, height = 5)
+#ggsave("./test/analysis/oxo_win_02.png", width = def_width, height = def_height)
 
 #draws
 oxo %>%
@@ -173,5 +177,5 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_draw_02.png", width = 5, height = 5)
+#ggsave("./test/analysis/oxo_draw_02.png", width = def_width, height = def_height)
 
