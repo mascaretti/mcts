@@ -1,9 +1,11 @@
 #INITIALISATION -----------------------------
 #Loading the Tidyverse Library (https://www.tidyverse.org/)
 library(tidyverse)
+library(forcats)
 
 #Setting the current workind directory
-setwd("~/PACS/virtual/apc")
+#setwd("~/PACS/virtual/apc")
+setwd("~/PACS/apc")
 
 #Reading the dataset
 results <- read_csv("./test/data_games.csv", col_names = TRUE)
@@ -32,6 +34,18 @@ nim %>%
 #Save plot
 #ggsave("./test/analysis/nim_01.png", width = 5, height = 5)
 
+nim %>%
+  filter(PLAYER == 1) %>%
+  mutate(PERF_INCR = ((N_WIN - nim_ran_victories) / nim_ran_victories)) %>%
+  ggplot() +
+  geom_col(mapping = aes(x = IN_ITER, y = PERF_INCR)) +
+  facet_wrap(~ OUT_ITER, labeller = label_both) +
+  labs(x = "Number of roll-outs", y = "Number of wins", title = "Performance increase of Player 1 at Nim")
+
+#Save plot
+#ggsave("./test/analysis/nim_01_pi.png", width = 5, height = 5)
+
+
 
 #Plotting for the second Nim player
 nim %>%
@@ -45,6 +59,32 @@ nim %>%
 #Save plot
 #ggsave("./test/analysis/nim_02.png", width = 5, height = 5)
 
+nim %>%
+  filter(PLAYER == 2) %>%
+  mutate(PERF_INCR = ((N_WIN - nim_ran_victories) / nim_ran_victories)) %>%
+  ggplot() +
+  geom_col(mapping = aes(x = IN_ITER, y = PERF_INCR)) +
+  facet_wrap(~ OUT_ITER, labeller = label_both) +
+  labs(x = "Number of roll-outs", y = "Number of wins", title = "Performance increase of Player 1 at Nim")
+
+#Save plot
+#ggsave("./test/analysis/nim_02_pi.png", width = 5, height = 5)
+
+
+#Checking if the number of wins changes
+#considering the different players
+nim %>%
+  mutate(PLAYER = as.character(PLAYER)) %>%
+  mutate(PLAYER = as_factor(PLAYER)) %>%
+  mutate(TOT_ITER = IN_ITER * OUT_ITER) %>%
+  ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
+  geom_boxplot() +
+  geom_jitter(mapping = aes(size = IN_ITER, colour = OUT_ITER), width = 0.2, alpha = 0.8) +
+  labs(title = "Boxplot of the number of wins at Nim according to the player")
+
+#Save plot
+ggsave("./test/analysis/nim_boxplot.png", width = 10, height = 10)
+
 #OXO-------------------------------
 
 #Create the oxo dataset
@@ -57,8 +97,34 @@ oxo <- results %>%
 oxo_ran_victories <- results %>%
   filter(GAME == "oxo_rand") %>%
   mutate(N_LOSS = N_MATCH - (N_WIN + N_DRAW)) %>%
-  select(c(N_WIN, N_DRAW, N_LOSS)) %>%
-  as.vector()
+  select(c(N_WIN, N_DRAW, N_LOSS))
+
+#Checking if the number of wins changes
+#considering the different players
+oxo %>%
+  mutate(PLAYER = as.character(PLAYER)) %>%
+  mutate(PLAYER = as_factor(PLAYER)) %>%
+  mutate(TOT_ITER = IN_ITER * OUT_ITER) %>%
+  ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
+  geom_boxplot() +
+  geom_jitter(mapping = aes(size = IN_ITER, colour = OUT_ITER), width = 0.2, alpha = 0.8) +
+  labs(title = "Boxplot of the number of wins at Tic-tac-toe according to the player")
+
+#Save plot
+ggsave("./test/analysis/oxo_boxplot_draws.png", width = 10, height = 10)
+
+
+oxo %>%
+  mutate(PLAYER = as.character(PLAYER)) %>%
+  mutate(PLAYER = as_factor(PLAYER)) %>%
+  mutate(TOT_ITER = IN_ITER * OUT_ITER) %>%
+  ggplot(mapping = aes(x = PLAYER, y = N_DRAW)) +
+  geom_boxplot() +
+  geom_jitter(mapping = aes(size = IN_ITER, colour = OUT_ITER), width = 0.2, alpha = 0.8) +
+  labs(title = "Boxplot of the number of draws at Tic-tac-toe according to the player")
+
+#Save plot
+ggsave("./test/analysis/oxo_boxplot_draws.png", width = 10, height = 10)
 
 #Plotting for the first Oxo player
 oxo %>%
