@@ -71,7 +71,7 @@ private:
   std::chrono::steady_clock rng_time;
   int seed_increment = 0;
   std::default_random_engine rng;
-  // int gen_rand_seed(void);
+  int gen_rand_seed(void);
   void set_rand_seed(void);
 
   int is_parallel = 0;

@@ -102,7 +102,7 @@ namespace game {
 				};
 
 
-			OxoGame(int seed): random_action_seed{seed}, gen{seed}  {
+			OxoGame(int seed): random_action_seed{seed}, gen(seed)  {
 				board[0]= {{0, 0, 0}};
 				board[1]= {{0, 0, 0}};
 				board[2]= {{0, 0, 0}};
