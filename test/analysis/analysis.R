@@ -32,19 +32,28 @@ nim %>%
   ggplot() +
   geom_col(mapping = aes(x = IN_ITER, y = N_WIN)) +
   geom_hline(yintercept = nim_ran_victories, linetype = "dashed", colour = "red") +
-  facet_wrap(~ OUT_ITER, labeller = label_both) +
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Nim")
-
 #Save plot
 ggsave("./test/analysis/nim_01.png", width = def_width, height = def_height)
 
+
 nim %>%
   filter(PLAYER == 1) %>%
-  mutate(PERF_INCR = ((N_WIN - nim_ran_victories) / nim_ran_victories)) %>%
+  ggplot() +
+  geom_point(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  geom_path(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  geom_hline(yintercept = nim_ran_victories, linetype = "dashed", colour = "red") +
+  labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Nim")
+
+#Save plot
+ggsave("./test/analysis/nim_01_points.png", width = def_width, height = def_height)
+
+nim %>%
+  filter(PLAYER == 1) %>%
+  mutate(PERF_INCR = ((N_WIN - nim_ran_victories) / nim_ran_victories) * 100) %>%
   ggplot() +
   geom_col(mapping = aes(x = IN_ITER, y = PERF_INCR)) +
-  facet_wrap(~ OUT_ITER, labeller = label_both) +
-  labs(x = "Number of roll-outs", y = "Number of wins", title = "Performance increase of Player 1 at Nim")
+  labs(x = "Number of roll-outs", y = "% Performance increase", title = "Performance increase of Player 1 at Nim")
 
 #Save plot
 ggsave("./test/analysis/nim_01_pi.png", width = def_width, height = def_height)
@@ -57,7 +66,6 @@ nim %>%
   ggplot() +
   geom_col(mapping = aes(x = IN_ITER, y = N_WIN)) +
   geom_hline(yintercept = nim_ran_victories, linetype = "dashed", colour = "red") +
-  facet_wrap(~ OUT_ITER, labeller = label_both) +
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Nim")
 
 #Save plot
@@ -65,11 +73,23 @@ ggsave("./test/analysis/nim_02.png", width = def_width, height = def_height)
 
 nim %>%
   filter(PLAYER == 2) %>%
-  mutate(PERF_INCR = ((N_WIN - nim_ran_victories) / nim_ran_victories)) %>%
+  ggplot() +
+  geom_point(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  geom_path(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  geom_hline(yintercept = nim_ran_victories, linetype = "dashed", colour = "red") +
+  labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Nim")
+
+#Save plot
+ggsave("./test/analysis/nim_02_points.png", width = def_width, height = def_height)
+
+
+
+nim %>%
+  filter(PLAYER == 2) %>%
+  mutate(PERF_INCR = ((N_WIN - nim_ran_victories) / nim_ran_victories) * 100) %>%
   ggplot() +
   geom_col(mapping = aes(x = IN_ITER, y = PERF_INCR)) +
-  facet_wrap(~ OUT_ITER, labeller = label_both) +
-  labs(x = "Number of roll-outs", y = "Number of wins", title = "Performance increase of Player 2 at Nim")
+  labs(x = "Number of roll-outs", y = "% Performance increase", title = "Performance increase of Player 2 at Nim")
 
 #Save plot
 ggsave("./test/analysis/nim_02_pi.png", width = def_width, height = def_height)
@@ -80,10 +100,9 @@ ggsave("./test/analysis/nim_02_pi.png", width = def_width, height = def_height)
 nim %>%
   mutate(PLAYER = as.character(PLAYER)) %>%
   mutate(PLAYER = as_factor(PLAYER)) %>%
-  mutate(TOT_ITER = IN_ITER * OUT_ITER) %>%
   ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
   geom_boxplot() +
-  geom_jitter(mapping = aes(size = IN_ITER, colour = OUT_ITER), width = 0.2, alpha = 0.8) +
+  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4) +
   labs(title = "Boxplot of the number of wins at Nim according to the player")
 
 #Save plot
@@ -106,38 +125,53 @@ oxo_ran_victories <- results %>%
 
 #Checking if the number of wins/draws changes
 #considering the different players
+#Wins
 oxo %>%
   mutate(PLAYER = as.character(PLAYER)) %>%
   mutate(PLAYER = as_factor(PLAYER)) %>%
-  mutate(TOT_ITER = IN_ITER * OUT_ITER) %>%
   ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
   geom_boxplot() +
-  geom_jitter(mapping = aes(size = IN_ITER, colour = OUT_ITER), width = 0.2, alpha = 0.8) +
+  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4) +
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[1]), linetype = "dashed", colour = "red", show.legend = TRUE) +
   labs(title = "Boxplot of the number of wins at Tic-tac-toe according to the player")
 
 #Save plot
 ggsave("./test/analysis/oxo_boxplot_wins.png", width = def_width, height = def_height)
 
-
+#Draws
 oxo %>%
   mutate(PLAYER = as.character(PLAYER)) %>%
   mutate(PLAYER = as_factor(PLAYER)) %>%
-  mutate(TOT_ITER = IN_ITER * OUT_ITER) %>%
   ggplot(mapping = aes(x = PLAYER, y = N_DRAW)) +
   geom_boxplot() +
-  geom_jitter(mapping = aes(size = IN_ITER, colour = OUT_ITER), width = 0.2, alpha = 0.8) +
+  geom_jitter(mapping = aes(size = IN_ITER), colour = "blue", width = 0.2, alpha = 0.4) +
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[2]), linetype = "dashed", colour = "blue", show.legend = TRUE) +
   labs(title = "Boxplot of the number of draws at Tic-tac-toe according to the player")
 
 #Save plot
 ggsave("./test/analysis/oxo_boxplot_draws.png", width = def_width, height = def_height)
 
+#Losses
+oxo %>%
+  mutate(PLAYER = as.character(PLAYER)) %>%
+  mutate(PLAYER = as_factor(PLAYER)) %>%
+  ggplot(mapping = aes(x = PLAYER, y = N_LOSS)) +
+  geom_boxplot() +
+  geom_jitter(mapping = aes(size = IN_ITER), colour = "green", width = 0.2, alpha = 0.4) +
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[3]), linetype = "dashed", colour = "green", show.legend = TRUE) +
+  labs(title = "Boxplot of the number of losses at Tic-tac-toe according to the player")
+
+#Save plot
+ggsave("./test/analysis/oxo_boxplot_losses.png", width = def_width, height = def_height)
+
+
 #Plotting for the first Oxo player
 oxo %>%
   filter(PLAYER == 1) %>%
-  ggplot() +
-  geom_col(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  ggplot(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  geom_point() +
+  geom_path() +
   geom_hline(yintercept = as.numeric(oxo_ran_victories[1]), linetype = "dashed", colour = "red") +
-  facet_wrap(~ OUT_ITER, labeller = label_both) +
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Tic-tac-toe")
 
 #Saving the plot
@@ -146,23 +180,39 @@ ggsave("./test/analysis/oxo_win_01.png", width = def_width, height = def_height)
 #draws
 oxo %>%
   filter(PLAYER == 1) %>%
-  ggplot() +
-  geom_col(mapping = aes(x = IN_ITER, y = N_DRAW)) +
+  ggplot(mapping = aes(x = IN_ITER, y = N_DRAW)) +
+  geom_point() +
+  geom_path() +
   geom_hline(yintercept = as.numeric(oxo_ran_victories[2]), linetype = "dashed", colour = "blue") +
   facet_wrap(~ OUT_ITER, labeller = label_both) +
-  labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Tic-tac-toe")
+  labs(x = "Number of roll-outs", y = "Number of Draws", title = "Draws of Player 1 at Tic-tac-toe")
 
 #Saving the plot
 ggsave("./test/analysis/oxo_draw_01.png", width = def_width, height = def_height)
 
 
+#losses
+oxo %>%
+  filter(PLAYER == 1) %>%
+  ggplot(mapping = aes(x = IN_ITER, y = N_LOSS)) +
+  geom_point() +
+  geom_path() +
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[3]), linetype = "dashed", colour = "green") +
+  facet_wrap(~ OUT_ITER, labeller = label_both) +
+  labs(x = "Number of roll-outs", y = "Number of losses", title = "Losses of Player 1 at Tic-tac-toe")
+
+#Saving the plot
+ggsave("./test/analysis/oxo_loss_01.png", width = def_width, height = def_height)
+
+
 #Plotting for the second Oxo player
+
 oxo %>%
   filter(PLAYER == 2) %>%
-  ggplot() +
-  geom_col(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  ggplot(mapping = aes(x = IN_ITER, y = N_WIN)) +
+  geom_point() +
+  geom_path() +
   geom_hline(yintercept = as.numeric(oxo_ran_victories[1]), linetype = "dashed", colour = "red") +
-  facet_wrap(~ OUT_ITER, labeller = label_both) +
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Tic-tac-toe")
 
 #Saving the plot
@@ -171,12 +221,26 @@ ggsave("./test/analysis/oxo_win_02.png", width = def_width, height = def_height)
 #draws
 oxo %>%
   filter(PLAYER == 2) %>%
-  ggplot() +
-  geom_col(mapping = aes(x = IN_ITER, y = N_DRAW)) +
+  ggplot(mapping = aes(x = IN_ITER, y = N_DRAW)) +
+  geom_point() +
+  geom_path() +
   geom_hline(yintercept = as.numeric(oxo_ran_victories[2]), linetype = "dashed", colour = "blue") +
   facet_wrap(~ OUT_ITER, labeller = label_both) +
-  labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Tic-tac-toe")
+  labs(x = "Number of roll-outs", y = "Number of Draws", title = "Draws of Player 2 at Tic-tac-toe")
 
 #Saving the plot
 ggsave("./test/analysis/oxo_draw_02.png", width = def_width, height = def_height)
 
+
+#losses
+oxo %>%
+  filter(PLAYER == 2) %>%
+  ggplot(mapping = aes(x = IN_ITER, y = N_LOSS)) +
+  geom_point() +
+  geom_path() +
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[3]), linetype = "dashed", colour = "green") +
+  facet_wrap(~ OUT_ITER, labeller = label_both) +
+  labs(x = "Number of roll-outs", y = "Number of losses", title = "Losses of Player 2 at Tic-tac-toe")
+
+#Saving the plot
+ggsave("./test/analysis/oxo_loss_02.png", width = def_width, height = def_height)
