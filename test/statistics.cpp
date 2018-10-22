@@ -30,7 +30,7 @@ using Nim = game::Nim::NimGame<>;
 using NimAction = game::Nim::NimAction;
 
 seed_generator gen_seed;
-int n_sample = 1000;
+int n_sample = 100;
 std::vector<data_packet> collected_data;
 
 
@@ -57,10 +57,11 @@ collected_data.push_back(temp_data_oxo);
 for (int k = 1; k<3; ++k) {
 
   // Outer iterations
-  for (int i = 1; i<10000; i=10*i) {
+  //for (int i = 1; i<10000; i+= 500) {
+  	int i{100};
 
     // Inner iterations
-    for (int j = 1; j<10000; j=10*j) {
+    for (int j = 100; j<=2000; j+= 100) {
 
       data_packet temp_data;
       temp_data.game_name = "oxo";
@@ -99,7 +100,7 @@ for (int k = 1; k<3; ++k) {
 
     }
 
-  }
+  //}
 
 }
 
@@ -127,10 +128,11 @@ collected_data.push_back(temp_data_nim);
 for (int k = 1; k<3; ++k) {
 
   // Outer iterations
-  for (int i = 1; i<10000; i=10*i) {
+  //for (int i = 1; i<10000; i+= 500) {
+  	int i{100};
 
     // Inner iterations
-    for (int j = 1; j<10000; j=10*j) {
+    for (int j = 100; j<=2000; j+= 100) {
 
       data_packet temp_data;
       temp_data.game_name = "nim";
@@ -169,7 +171,7 @@ for (int k = 1; k<3; ++k) {
 
     }
 
-  }
+  //}
 
 }
 
