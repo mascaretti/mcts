@@ -365,11 +365,11 @@ void MonteCarloSearchTree<Game,Move>::set_rand_seed()
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     // seed = ( ( ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000*(rank+1) ) +seed_increment ) % std::numeric_limits<int>::max();
-    seed = ( (int)((diff.count())*100) + seed_increment ) % std::numeric_limits<int>::max();
+    seed = ( (int)((diff.count())*100) + seed_increment );
   }
   else {
     // seed = ( ( ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000 ) + seed_increment ) % std::numeric_limits<int>::max();
-    seed = ( (int)((diff.count())*100) + seed_increment ) % std::numeric_limits<int>::max();
+    seed = ( (int)((diff.count())*100) + seed_increment );
   }
   rng.seed(seed);
   seed_increment++;
@@ -384,10 +384,10 @@ int MonteCarloSearchTree<Game,Move>::gen_rand_seed()
   if ( is_parallel ) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    return ( seed + seed_increment ) % std::numeric_limits<int>::max();
+    return ( seed + seed_increment );
   }
   else {
-    return ( seed + seed_increment ) % std::numeric_limits<int>::max();
+    return ( seed + seed_increment );
   }
 }
 
