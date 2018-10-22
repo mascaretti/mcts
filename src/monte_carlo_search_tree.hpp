@@ -5,7 +5,9 @@
 #include <random>
 #include <mpi.h>
 #include <ctime>
+#include <chrono>
 #include <algorithm>
+#include <limits>
 
 // DEBUG
 #include <cassert>
@@ -58,16 +60,21 @@ private:
 
   NodePointerType select(void) const;
   NodePointerType expand(const NodePointerType);
-  double rollout(const NodePointerType) const;
+  double rollout(const NodePointerType);
   void back_propagation(const NodePointerType, double);
 
   NodePointerType root;
   NodePointerType current_game_node;
 
+  // RNG management
   int seed;
-  int is_parallel = 0;
+  std::chrono::steady_clock rng_time;
+  int seed_increment = 0;
   std::default_random_engine rng;
+  // int gen_rand_seed(void);
   void set_rand_seed(void);
+
+  int is_parallel = 0;
 
   unsigned outer_iter;
   unsigned inner_iter;
@@ -220,9 +227,8 @@ MonteCarloSearchTree<Game,Move>::expand(const NodePointerType current_parent)
 
 template<class Game, class Move>
 double
-MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf) const
+MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf)
 {
-  // set_rand_seed();
   double total_score(0.0);
   if ( is_parallel ) {
     int size, rank;
@@ -233,13 +239,17 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf) con
     if (rank<reminder) local_iter++;
     for (unsigned i = 0; i<local_iter; ++i) {
       Game temp_game = current_leaf->get_game();
-      temp_game.set_seed(seed);
+      temp_game.set_seed(gen_rand_seed());
       while ( !temp_game.get_terminal_status() )
         temp_game.apply_action(temp_game.random_action());
       double result = (double)temp_game.evaluate();
+      /*
       result = result * ( current_game_node->get_player()==1 ) -
         result * ( current_game_node->get_player()==2 ) +
         0.5*(result==0);
+      */
+      result = 0.5*(result+1) * ( current_game_node->get_player()==1 )
+        + 0.5*(1-result) * ( current_game_node->get_player()==2 );
       total_score += result;
     }
     MPI_Allreduce(MPI_IN_PLACE, &total_score, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -247,13 +257,17 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf) con
   else {
     for (unsigned i = 0; i<inner_iter; ++i) {
       Game temp_game = current_leaf->get_game();
-      temp_game.set_seed(seed);
+      temp_game.set_seed(gen_rand_seed());
       while ( !temp_game.get_terminal_status() )
         temp_game.apply_action( temp_game.random_action() );
       double result = (double)temp_game.evaluate();
+      /*
       result = result * ( current_game_node->get_player()==1 ) -
         result * ( current_game_node->get_player()==2 ) +
         0.5*(result==0);
+      */
+      result = 0.5*(result+1) * ( current_game_node->get_player()==1 )
+        + 0.5*(1-result) * ( current_game_node->get_player()==2 );
       total_score += result;
     }
   }
@@ -276,6 +290,7 @@ template<class Game, class Move>
 Move
 MonteCarloSearchTree<Game,Move>::uct_search()
 {
+
   for (unsigned i = 0; i<outer_iter; ++i) {
 
     // Select
@@ -291,6 +306,7 @@ MonteCarloSearchTree<Game,Move>::uct_search()
     back_propagation(selected_leaf, score);
 
   }
+
   // Select best move
   std::vector<NodePointerType> candidate_nodes = current_game_node->get_children();
   // Class node has to store the move where it come from!
@@ -301,9 +317,16 @@ MonteCarloSearchTree<Game,Move>::uct_search()
       {
         best_node_it = it;
       }
+    /*
+    if ( (*it)->get_visits() > (*best_node_it)->get_visits() )
+      {
+        best_node_it = it;
+      }
+    */
   }
   current_game_node = *best_node_it;
   return (*best_node_it)->get_last_move();
+
 }
 
 // HERE WE HAVE ONE OF THE PROBLEMS...
@@ -330,17 +353,42 @@ MonteCarloSearchTree<Game,Move>::change_current_status(const Move& opponent_move
 template<class Game, class Move>
 void MonteCarloSearchTree<Game,Move>::set_rand_seed()
 {
+  /*
   time_t rawtime;
   struct tm * ptm;
   time ( &rawtime );
   ptm = gmtime ( &rawtime );
+  */
+  auto now_time = rng_time.now();
+  std::chrono::duration<double> diff = now_time.time_since_epoch();
   if ( is_parallel ) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    seed = ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000*(rank+1);
+    // seed = ( ( ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000*(rank+1) ) +seed_increment ) % std::numeric_limits<int>::max();
+    seed = ( (int)((diff.count())*100) + seed_increment ) % std::numeric_limits<int>::max();
   }
-  else
-    seed = ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000;
+  else {
+    // seed = ( ( ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000 ) + seed_increment ) % std::numeric_limits<int>::max();
+    seed = ( (int)((diff.count())*100) + seed_increment ) % std::numeric_limits<int>::max();
+  }
+  rng.seed(seed);
+  seed_increment++;
+}
+
+template<class Game, class Move>
+int MonteCarloSearchTree<Game,Move>::gen_rand_seed()
+{
+  auto now_time = rng_time.now();
+  std::chrono::duration<double> diff = now_time.time_since_epoch();
+  seed_increment++;
+  if ( is_parallel ) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    return ( seed + seed_increment ) % std::numeric_limits<int>::max();
+  }
+  else {
+    return ( seed + seed_increment ) % std::numeric_limits<int>::max();
+  }
 }
 
 // DEBUG

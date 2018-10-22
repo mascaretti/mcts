@@ -7,8 +7,8 @@ int main() {
 using Oxo = game::Oxo::OxoGame;
 using Move = game::Oxo::OxoAction;
 
-int outer_it1 = 1, inner_it1 = 1;
-int outer_it2 = 100, inner_it2 = 100;
+int outer_it1 = 10, inner_it1 = 10;
+int outer_it2 = 10, inner_it2 = 10;
 
 MPI_Init(nullptr, nullptr);
 
