@@ -29,3 +29,14 @@ ggplot(oxo, mapping = aes(x = simulation, y = elapsed, colour = size)) +
   geom_smooth(se = TRUE)
 
 ggsave(filename = "./test/SpeedupTest/speedup_oxo.png", height = height, width = width)
+
+
+
+speedup_nim <- nim %>%
+  group_by(size, simulation) %>%
+  summarize(value = mean(elapsed)) %>%
+  group_by(simulation) %>%
+  mutate(speed_up = value[size == 0]/value)
+
+ggplot(data = speedup_nim, mapping = aes(x = simulation, y = speed_up, colour = size)) +
+  geom_smooth()
