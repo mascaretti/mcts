@@ -14,6 +14,7 @@ namespace game {
 			/*The class Oxo implements the usual 3x3 tic-tac-toe board*/
 		private:
 			bool is_terminal{false};
+			bool no_move_played{true};
 			int agent_id{1};
 
 			std::array<std::array<int, 3>, 3> board;
@@ -126,6 +127,11 @@ namespace game {
 					throw ActionAlreadyPlayed{};
 
 
+				//update the action played status
+				if (no_move_played == true)
+					no_move_played= false;
+
+
 				//Action has effect depending on whose turn it is
 				if (agent_id == 1)
 					board[action.row][action.column]= 1;
@@ -204,7 +210,12 @@ namespace game {
 			void print() {
 				std::cout << "**************************************" << '\n';
 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
-				std::cout << "It plays: " << get_last_action().to_string() << '\n';
+
+				if (no_move_played == false)
+					std::cout << "First move.";
+				else
+					std::cout << "It plays: " << get_last_action().to_string() << '\n';
+				
 				std::cout << "Game finished? " << get_terminal_status() << '\n';
 				if (get_terminal_status() == true)
 					std::cout << "Outcome: " << evaluate() << '\n';
@@ -215,8 +226,36 @@ namespace game {
 
 
 			Action get_last_action() const {
+				if (no_move_played == true)
+					throw NoActionPlayed{};
 				return last_action;
-			}; //for debugging
+			};
+
+			virtual void human_input() override {
+				auto actions = get_actions();
+				bool correct_move{false};
+
+				int input;
+
+				while (correct_move == false) {
+				std::cout << "Human: this are the moves left for you." << '\n';
+				int j{1};
+				for (auto i = std::begin(actions); i != std::end(actions); ++i) {
+					std::cout << "Move " << j << ": " << (*i).to_string() << '\n';
+					j+= 1;
+				}
+				std::cout << "Pick a move! Select the number next to it.: ";
+				
+				std::cin >> input;
+
+				if (input >= 1 and input <= actions.size())
+					correct_move= true;
+				else
+					std::cout << "Move not allowed, human. Try again.";
+				}
+
+				apply_action(actions[input - 1]);
+			}
 	};
 
 	}

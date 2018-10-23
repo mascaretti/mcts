@@ -1,5 +1,5 @@
-CXX = clang++
-CC = clang++
+#CXX = g++
+#CC = g++
 CXXFLAGS = -Wall -std=c++14
 LDLFLAGS = -Wall -std=c++14
 SRCS = main.cpp ../../../src/action.cpp

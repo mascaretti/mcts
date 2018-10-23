@@ -5,10 +5,10 @@
 int main(int argc, char const *argv[])
 {
 	game::Oxo::OxoGame new_game{19};
-	game::Oxo::OxoAction new_action;
 
 	do {
-		new_action= new_game.random_action();
+		std::cout << "Here" << '\n';
+		auto new_action= new_game.random_action();
 		new_game.apply_action(new_action);
 		new_game.print();
 		new_game.print_board();
