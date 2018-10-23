@@ -136,6 +136,31 @@ namespace game {
 				std::cout << "Poistion 2: " << " " << board[2] << '\n';
 			}; //print the value as string
 
+			virtual void human_input() override {
+				auto actions = get_actions();
+				bool correct_move{false};
+
+				int input;
+				
+				while (correct_move == false) {
+				std::cout << "Human: this are the moves left for you." << '\n';
+				int j{1};
+				for (auto i = std::begin(actions); i != std::end(actions); ++i) {
+					std::cout << "Move " << j << ": " << *i.to_string() << '\n';
+					j+= 1;
+				}
+				std::cout << "Pick a move! Select the number next to it.: ";
+				
+				std::cin >> input;
+
+				if (input >= 1 and input <= actions.size())
+					correct_move= true;
+				else
+					std::cout << "Move not allowed, human. Try again."
+				}
+
+				apply_action(actions[input - 1]);
+			}
 		};
 	}
 }

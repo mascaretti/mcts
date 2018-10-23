@@ -36,6 +36,8 @@ namespace game {
 		virtual int evaluate()= 0; //returns the utility as an integer if state is terminal, otherwise throws error
 
 		virtual void set_seed(int new_seed)= 0; //sets new seed
+
+		virtual void human_input()= 0; //takes input from human
 	};
 }
 
