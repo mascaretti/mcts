@@ -14,6 +14,7 @@ namespace game {
 			/*The class Oxo implements the usual 3x3 tic-tac-toe board*/
 		private:
 			bool is_terminal{false};
+			bool no_move_played{true};
 			int agent_id{1};
 
 			std::array<std::array<int, 3>, 3> board;
@@ -126,6 +127,11 @@ namespace game {
 					throw ActionAlreadyPlayed{};
 
 
+				//update the action played status
+				if (no_move_played == false)
+					no_move_played= true;
+
+
 				//Action has effect depending on whose turn it is
 				if (agent_id == 1)
 					board[action.row][action.column]= 1;
@@ -215,8 +221,10 @@ namespace game {
 
 
 			Action get_last_action() const {
+				if (no_move_played == true)
+					throw NoActionPlayed{};
 				return last_action;
-			}; //for debugging
+			};
 
 			virtual void human_input() override {
 				auto actions = get_actions();

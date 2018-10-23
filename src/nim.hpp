@@ -18,6 +18,7 @@ namespace game {
 
 		private:
 			bool is_terminal{false};
+			bool no_move_played{true};
 			int agent_id{1};
 			Action last_action;
 
@@ -54,6 +55,10 @@ namespace game {
 				//Check if the action to be played is legal
 				if (board[action.pile] < action.number)
 					throw IllegalAction{};
+
+				//update the action played status
+				if (no_move_played == false)
+					no_move_played= true;
 
 				//Update the status of the board
 				board[action.pile]-= action.number;
@@ -126,8 +131,10 @@ namespace game {
 
 
 			Action get_last_action() const {
+				if (no_move_played == true)
+					throw NoActionPlayed{};
 				return last_action;
-			}; //for debugging
+			};
 
 
 			void print_board() {

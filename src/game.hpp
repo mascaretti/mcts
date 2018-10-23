@@ -17,6 +17,7 @@ namespace game {
 	class NoActionsLeft{}; //if no actions are left
 	class GameNotOver{}; //if the game is not over and we want a utility value
 	class IllegalAction{}; //if the action is not legal
+	class NoActionPlayed{}; //if no action has been played
 
 	template <class Action>
 	class Game {
