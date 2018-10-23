@@ -4,14 +4,12 @@
 #include "node.hpp"
 #include <random>
 #include <mpi.h>
-#include <ctime>
 #include <chrono>
 #include <algorithm>
-#include <limits>
+#include <cmath>
 
 // DEBUG
 #include <cassert>
-#include <exception>
 
 /* - - - - - - - - - - - - - - - - - */
 // Declaration of the template class //
@@ -22,72 +20,81 @@ class MonteCarloSearchTree {
 
 public:
 
+  // Shared pointer to Node class type
   typedef typename Node<Game,Move>::NodePointerType NodePointerType;
 
-  /* Methods */
+  /* List of public methods */
 
+  // Performs the UCT search and find the best next move
   Move uct_search(void);
 
-  // Method to update the pointer to the curret game state
+  // Updates the pointer to the curret game state
   void change_current_status(const Move&);
 
   /* Setters */
-
   void set_outer_iter(unsigned it) { outer_iter = it; }
   void set_inner_iter(unsigned it) { inner_iter = it; }
   void set_ucb_constant(double c) { ucb_constant = c; }
 
   /* Constructors */
-
   MonteCarloSearchTree(unsigned, unsigned);
   MonteCarloSearchTree(unsigned, unsigned, double);
   MonteCarloSearchTree(int, unsigned, unsigned);
   MonteCarloSearchTree(int, unsigned, unsigned, double);
 
-  /* For now */
+  // For the moment copy assignment and costructors are prevented
+  // In future deep-copy costructor and assignment may be implemented
   MonteCarloSearchTree& operator = (const MonteCarloSearchTree&) = delete;
   MonteCarloSearchTree(const MonteCarloSearchTree&) = delete;
 
-  /* Methods for debug */
+  // Print info (DEBUG)
   void print_current_status_info(void) const;
+
+  /* Destructor */
+  ~MonteCarloSearchTree() = default;
 
 private:
 
-  /* Methods */
+  /* List of private methods */
 
+  // Given a node, computes its UCB
   double compute_ucb(const NodePointerType&) const;
+
+  // Given a parent node, returns the child with best UCB
   NodePointerType best_child_ucb(const NodePointerType&) const;
 
+  // Steps of the MCST algorithm
+  // (1) selects the best UCB node and returns it, via pointer
+  // (2) produces a leaf from the selected node and returns it
+  // (3) performs multiple MC simulations and returns the summed score
+  // (4) update visits and scores of the nodes all way back to the root
   NodePointerType select(void) const;
   NodePointerType expand(const NodePointerType);
   double rollout(const NodePointerType);
   void back_propagation(const NodePointerType, double);
 
+  // RNG management
+  int gen_rand_seed(void);
+  void set_rand_seed(void);
+
+  /* List of private members */
+
   NodePointerType root;
   NodePointerType current_game_node;
-
-  // RNG management
   int seed;
   std::chrono::steady_clock rng_time;
   int seed_increment = 0;
   std::default_random_engine rng;
-  int gen_rand_seed(void);
-  void set_rand_seed(void);
-
   int is_parallel = 0;
-
   unsigned outer_iter;
   unsigned inner_iter;
-
   double ucb_constant = sqrt(2.0);
 
 };
 
-
 /* - - - - - - - - - - - - - - - - - */
 // Definition of methods             //
 /* - - - - - - - - - - - - - - - - - */
-
 
 // *************
 // Constructors:
@@ -136,7 +143,6 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s, unsigned oi, unsign
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
   }
-
 
 // ********
 // Methods:
@@ -243,11 +249,6 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf)
       while ( !temp_game.get_terminal_status() )
         temp_game.apply_action(temp_game.random_action());
       double result = (double)temp_game.evaluate();
-      /*
-      result = result * ( current_game_node->get_player()==1 ) -
-        result * ( current_game_node->get_player()==2 ) +
-        0.5*(result==0);
-      */
       result = 0.5*(result+1) * ( current_game_node->get_player()==1 )
         + 0.5*(1-result) * ( current_game_node->get_player()==2 );
       total_score += result;
@@ -261,11 +262,6 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf)
       while ( !temp_game.get_terminal_status() )
         temp_game.apply_action( temp_game.random_action() );
       double result = (double)temp_game.evaluate();
-      /*
-      result = result * ( current_game_node->get_player()==1 ) -
-        result * ( current_game_node->get_player()==2 ) +
-        0.5*(result==0);
-      */
       result = 0.5*(result+1) * ( current_game_node->get_player()==1 )
         + 0.5*(1-result) * ( current_game_node->get_player()==2 );
       total_score += result;
@@ -317,19 +313,12 @@ MonteCarloSearchTree<Game,Move>::uct_search()
       {
         best_node_it = it;
       }
-    /*
-    if ( (*it)->get_visits() > (*best_node_it)->get_visits() )
-      {
-        best_node_it = it;
-      }
-    */
   }
   current_game_node = *best_node_it;
   return (*best_node_it)->get_last_move();
 
 }
 
-// HERE WE HAVE ONE OF THE PROBLEMS...
 template<class Game, class Move>
 void
 MonteCarloSearchTree<Game,Move>::change_current_status(const Move& opponent_move)
@@ -353,24 +342,15 @@ MonteCarloSearchTree<Game,Move>::change_current_status(const Move& opponent_move
 template<class Game, class Move>
 void MonteCarloSearchTree<Game,Move>::set_rand_seed()
 {
-  /*
-  time_t rawtime;
-  struct tm * ptm;
-  time ( &rawtime );
-  ptm = gmtime ( &rawtime );
-  */
   auto now_time = rng_time.now();
   std::chrono::duration<double> diff = now_time.time_since_epoch();
   if ( is_parallel ) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    // seed = ( ( ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000*(rank+1) ) +seed_increment ) % std::numeric_limits<int>::max();
     seed = ( (int)((diff.count())*100) + seed_increment );
   }
-  else {
-    // seed = ( ( ptm->tm_sec + 10*(ptm->tm_min) + 100*(ptm->tm_hour) + 1000 ) + seed_increment ) % std::numeric_limits<int>::max();
+  else
     seed = ( (int)((diff.count())*100) + seed_increment );
-  }
   rng.seed(seed);
   seed_increment++;
 }
@@ -384,12 +364,10 @@ int MonteCarloSearchTree<Game,Move>::gen_rand_seed()
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     return ( seed + seed_increment );
   }
-  else {
+  else
     return ( seed + seed_increment );
-  }
 }
 
-// DEBUG
 template<class Game, class Move>
 void MonteCarloSearchTree<Game,Move>::print_current_status_info() const {
   current_game_node->print_node();

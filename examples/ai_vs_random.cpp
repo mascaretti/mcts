@@ -108,7 +108,7 @@ else if (game_tag==2) {
 
 
 else {
-  std::cerr << "Inalid game tag" << std::endl;
+  std::cerr << "Invalid game tag" << std::endl;
 }
 
 MPI_Finalize();
