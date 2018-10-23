@@ -10,9 +10,9 @@ nim <- nim %>%
 
 ggplot(nim, mapping = aes(x = simulation, y = elapsed, colour = size)) +
   geom_smooth(se = TRUE) +
-  labs(title = "Elapsed Time for growing number of simulations with difference sizes - Nim (0 is serial)")
+  labs(title = "Elapsed Time for number of simulations - Nim (0 is serial)")
 
-ggsave(filename = "./test/SpeedupTest/speedup_nim.png")
+ggsave(filename = "./test/SpeedupTest/speedup_nim.png", height = 10, width = 10)
 
 # Oxo -------------------------------
 
@@ -22,7 +22,8 @@ oxo <- oxo %>%
   rename(size = X1, simulation = X2, elapsed = X3)
 
 ggplot(oxo, mapping = aes(x = simulation, y = elapsed, colour = size)) +
+  geom_point(alpha = 0.2, position = "jitter") +
   geom_smooth(se = TRUE) +
-  labs(title = "Elapsed for growing number of simulations with difference sizes - Tic-tac-toe (0 is serial)")
+  labs(title = "Elapsed Time for number of simulations - TicTacToe (0 is serial)")
 
 ggsave(filename = "./test/SpeedupTest/speedup_oxo.png")
