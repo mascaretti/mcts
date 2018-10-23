@@ -236,20 +236,22 @@ namespace game {
 				bool correct_move{false};
 
 				int input;
+				auto num_moves{actions.size()};
 
 				while (correct_move == false) {
-				std::cout << "Human: this are the moves left for you." << '\n';
+				std::cout << "Human: this are the moves left for you." << std::endl;
 				int j{1};
 				for (auto i = std::begin(actions); i != std::end(actions); ++i) {
-					std::cout << "Move " << j << ": " << (*i).to_string() << '\n';
+					std::cout << "Move " << j << ": " << (*i).to_string() << std::endl;
 					j+= 1;
 				}
-				std::cout << "Pick a move! Select the number next to it.: ";
+				std::cout << "Pick a move! Select the number next to it.: " << std::endl;
 				
 				std::cin >> input;
 
-				if (input >= 1 and input <= actions.size())
+				if (input >= 1 and input <= num_moves)
 					correct_move= true;
+
 				else
 					std::cout << "Move not allowed, human. Try again.";
 				}

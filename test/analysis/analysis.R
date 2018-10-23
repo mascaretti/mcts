@@ -130,7 +130,8 @@ oxo %>%
   mutate(PLAYER = as_factor(PLAYER)) %>%
   ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
   geom_boxplot() +
-  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4)
+  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4) +
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[1]), linetype = "dashed", colour = "red", show.legend = TRUE)
 
 #Save plot
 ggsave("./test/analysis/oxo_boxplot_wins.png", width = 5, height = 3)
