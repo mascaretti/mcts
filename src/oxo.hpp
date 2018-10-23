@@ -211,11 +211,11 @@ namespace game {
 				std::cout << "**************************************" << '\n';
 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
 
-				if (no_move_played == false)
+				if (no_move_played == true)
 					std::cout << "First move.";
 				else
 					std::cout << "It plays: " << get_last_action().to_string() << '\n';
-				
+
 				std::cout << "Game finished? " << get_terminal_status() << '\n';
 				if (get_terminal_status() == true)
 					std::cout << "Outcome: " << evaluate() << '\n';
@@ -246,7 +246,7 @@ namespace game {
 					j+= 1;
 				}
 				std::cout << "Pick a move! Select the number next to it.: ";
-				
+
 				std::cin >> input;
 
 				if (input >= 1 and input <= num_moves)
