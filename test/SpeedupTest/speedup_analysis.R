@@ -31,12 +31,41 @@ ggplot(oxo, mapping = aes(x = simulation, y = elapsed, colour = size)) +
 ggsave(filename = "./test/SpeedupTest/speedup_oxo.png", height = height, width = width)
 
 
+# Speed-up --------
 
-speedup_nim <- nim %>%
+
+grouped_nim <- nim %>%
   group_by(size, simulation) %>%
-  summarize(value = mean(elapsed)) %>%
-  group_by(simulation) %>%
-  mutate(speed_up = value[size == 0]/value)
+  summarize(avg = mean(elapsed))
+matrix_nim <- as.matrix(grouped_nim)
+base_nim <- as.numeric(matrix_nim[1:20, 3])
+zero_nim <- base_nim / base_nim
+one_nim <- base_nim / as.numeric(matrix_nim[21:40, 3])
+two_nim <- base_nim / as.numeric(matrix_nim[41:60, 3])
+three_nim <- base_nim / as.numeric(matrix_nim[61:80, 3])
+four_nim <- base_nim / as.numeric(matrix_nim[81:100, 3])
+speed_nim <- unlist(c(zero_nim, one_nim, two_nim, three_nim, four_nim))
 
-ggplot(data = speedup_nim, mapping = aes(x = simulation, y = speed_up, colour = size)) +
-  geom_smooth()
+grouped_nim <- add_column(grouped_nim, speed_up = speed_nim)
+ggplot(grouped_nim, mapping = aes(x = simulation, y = speed_up, colour = size)) +
+  geom_smooth(se = FALSE)
+
+ggsave(filename = "./test/SpeedupTest/nim_speed.png", height = height, width = width)
+
+grouped_oxo <- oxo %>%
+  group_by(size, simulation) %>%
+  summarize(avg = mean(elapsed))
+matrix_oxo <- as.matrix(grouped_oxo)
+base_oxo <- as.numeric(matrix_oxo[1:20, 3])
+zero_oxo <- base_oxo / base_oxo
+one_oxo <- base_oxo / as.numeric(matrix_oxo[21:40, 3])
+two_oxo <- base_oxo / as.numeric(matrix_oxo[41:60, 3])
+three_oxo <- base_oxo / as.numeric(matrix_oxo[61:80, 3])
+four_oxo <- base_oxo / as.numeric(matrix_oxo[81:100, 3])
+speed_oxo <- unlist(c(zero_oxo, one_oxo, two_oxo, three_oxo, four_oxo))
+
+grouped_oxo <- add_column(grouped_oxo, speed_up = speed_oxo)
+ggplot(grouped_oxo, mapping = aes(x = simulation, y = speed_up, colour = size)) +
+  geom_smooth(se = FALSE)
+
+ggsave(filename = "./test/SpeedupTest/oxo_speed.png", height = height, width = width)
