@@ -3,6 +3,7 @@
 #include "../src/nim.hpp"
 
 #include <fstream>
+#include <ctime>
 
 // Testing how well the algorithm behave against a purely random player
 
