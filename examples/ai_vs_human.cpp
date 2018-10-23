@@ -20,7 +20,7 @@ int game_tag, difficulty_tag;
 if (rank==0) {
   std::cout << std::endl;
   std::cout << "#######################" << std::endl;
-  std::cout << "Monte Carlo search Tree\nAI vs. random" << std::endl;
+  std::cout << "Monte Carlo search Tree\nAI vs. human" << std::endl;
   std::cout << "#######################" << std::endl;
   std::cout << std::endl;
   std::cout << "Select game:\n[1]: Oxo\n[2]: Nim" << std::endl;
@@ -55,18 +55,24 @@ if (game_tag==1) {
   Oxo oxo_board;
   OxoMove current_player_move;
   MonteCarloSearchTree<Oxo, OxoMove> mcst_player(outer_it, inner_it);
+  int idx_move = 0;
   if (rank == 0) {
     oxo_board.print();
     oxo_board.print_board();
   }
   while( !oxo_board.get_terminal_status() ) {
-    if ( oxo_board.get_agent_id() == 1 )
-      current_player_move = mcst_player.uct_search();
-    else {
-      current_player_move = oxo_board.random_action();
-      mcst_player.change_current_status(current_player_move);
+    if ( oxo_board.get_agent_id() == 1 ) {
+      if (rank == 0)
+        idx_move = oxo_board.human_input();
+      MPI_Bcast(&idx_move, 1, MPI_INT, 0, MPI_COMM_WORLD);
+      current_player_move = oxo_board.get_actions()[idx_move];
+      oxo_board.apply_action(current_player_move);
+      mcst_player.change_current_status(oxo_board.get_last_action());
     }
-    oxo_board.apply_action(current_player_move);
+    else {
+      current_player_move = mcst_player.uct_search();
+      oxo_board.apply_action(current_player_move);
+    }
     if (rank == 0) {
       oxo_board.print();
       oxo_board.print_board();
@@ -87,18 +93,24 @@ else if (game_tag==2) {
   Nim nim_board;
   NimMove current_player_move;
   MonteCarloSearchTree<Nim, NimMove> mcst_player(outer_it, inner_it);
+  int idx_move = 0;
   if (rank == 0) {
     nim_board.print();
     nim_board.print_board();
   }
   while( !nim_board.get_terminal_status() ) {
-    if ( nim_board.get_agent_id() == 1 )
-      current_player_move = mcst_player.uct_search();
-    else {
-      current_player_move = nim_board.random_action();
-      mcst_player.change_current_status(current_player_move);
+    if ( nim_board.get_agent_id() == 1 ) {
+      if (rank == 0)
+        idx_move = nim_board.human_input();
+      MPI_Bcast(&idx_move, 1, MPI_INT, 0, MPI_COMM_WORLD);
+      current_player_move = nim_board.get_actions()[idx_move];
+      nim_board.apply_action(current_player_move);
+      mcst_player.change_current_status(nim_board.get_last_action());
     }
-    nim_board.apply_action(current_player_move);
+    else {
+      current_player_move = mcst_player.uct_search();
+      nim_board.apply_action(current_player_move);
+    }
     if (rank == 0) {
       nim_board.print();
       nim_board.print_board();

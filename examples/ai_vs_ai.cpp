@@ -98,8 +98,12 @@ if (game_tag==1) {
     }
   }
   if (rank == 0) {
-    int winner = oxo_board.evaluate() == 1 ? 1 : 2;
-    std::cout << "Player " << winner << " wins!" << std::endl;
+    if (oxo_board.evaluate()==1)
+      std::cout << "Player 1 wins!" << std::endl;
+    else if (oxo_board.evaluate()==-1)
+      std::cout << "Player 2 wins!" << std::endl;
+    else
+      std::cout << "We call it a draw..." << std::endl;
   }
 }
 
@@ -129,8 +133,12 @@ else if (game_tag==2) {
     }
   }
   if (rank == 0) {
-    int winner = nim_board.evaluate() == 1 ? 1 : 2;
-    std::cout << "Player " << winner << " wins!" << std::endl;
+    if (nim_board.evaluate()==1)
+      std::cout << "Player 1 wins!" << std::endl;
+    else if (nim_board.evaluate()==-1)
+      std::cout << "Player 2 wins!" << std::endl;
+    else
+      std::cout << "We call it a draw..." << std::endl;
   }
 }
 

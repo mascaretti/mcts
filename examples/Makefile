@@ -1,10 +1,10 @@
 CXX = mpicxx
 CXXFLAGS = -std=c++11 -Wall -g
 
-SRCS = ai_vs_random.cpp ai_vs_ai.cpp ../src/action.cpp
+SRCS = ai_vs_random.cpp ai_vs_ai.cpp ai_vs_human.cpp ../src/action.cpp
 OBJS = $(SRCS:.cpp=.o)
 HEADERS = ../src/monte_carlo_search_tree.hpp ../src/node.hpp ../src/oxo.hpp ../src/nim.hpp ../src/action.hpp ../src/game.hpp
-EXEC = ai_vs_random ai_vs_ai
+EXEC = ai_vs_random ai_vs_ai ai_vs_human
 
 .PHONY = all clean distclean
 
