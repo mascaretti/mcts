@@ -378,8 +378,6 @@ void MonteCarloSearchTree<Game,Move>::set_rand_seed()
 template<class Game, class Move>
 int MonteCarloSearchTree<Game,Move>::gen_rand_seed()
 {
-  auto now_time = rng_time.now();
-  std::chrono::duration<double> diff = now_time.time_since_epoch();
   seed_increment++;
   if ( is_parallel ) {
     int rank;
