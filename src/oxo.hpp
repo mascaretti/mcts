@@ -128,8 +128,8 @@ namespace game {
 
 
 				//update the action played status
-				if (no_move_played == false)
-					no_move_played= true;
+				if (no_move_played == true)
+					no_move_played= false;
 
 
 				//Action has effect depending on whose turn it is
@@ -210,7 +210,12 @@ namespace game {
 			void print() {
 				std::cout << "**************************************" << '\n';
 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
-				std::cout << "It plays: " << get_last_action().to_string() << '\n';
+
+				if (no_move_played == false)
+					std::cout << "First move.";
+				else
+					std::cout << "It plays: " << get_last_action().to_string() << '\n';
+				
 				std::cout << "Game finished? " << get_terminal_status() << '\n';
 				if (get_terminal_status() == true)
 					std::cout << "Outcome: " << evaluate() << '\n';
@@ -236,7 +241,7 @@ namespace game {
 				std::cout << "Human: this are the moves left for you." << '\n';
 				int j{1};
 				for (auto i = std::begin(actions); i != std::end(actions); ++i) {
-					std::cout << "Move " << j << ": " << *i.to_string() << '\n';
+					std::cout << "Move " << j << ": " << (*i).to_string() << '\n';
 					j+= 1;
 				}
 				std::cout << "Pick a move! Select the number next to it.: ";
@@ -246,7 +251,7 @@ namespace game {
 				if (input >= 1 and input <= actions.size())
 					correct_move= true;
 				else
-					std::cout << "Move not allowed, human. Try again."
+					std::cout << "Move not allowed, human. Try again.";
 				}
 
 				apply_action(actions[input - 1]);
