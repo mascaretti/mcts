@@ -231,7 +231,7 @@ namespace game {
 				return last_action;
 			};
 
-			virtual void human_input() override {
+			virtual int human_input() override {
 				auto actions = get_actions();
 				bool correct_move{false};
 
@@ -245,7 +245,7 @@ namespace game {
 					std::cout << "Move " << j << ": " << (*i).to_string() << std::endl;
 					j+= 1;
 				}
-				std::cout << "Pick a move! Select the number next to it.: " << std::endl;
+				std::cout << "Pick a move! Select the number next to it.: ";
 				
 				std::cin >> input;
 
@@ -256,7 +256,7 @@ namespace game {
 					std::cout << "Move not allowed, human. Try again.";
 				}
 
-				apply_action(actions[input - 1]);
+				return (input - 1);
 			}
 	};
 

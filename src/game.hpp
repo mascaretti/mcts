@@ -38,7 +38,7 @@ namespace game {
 
 		virtual void set_seed(int new_seed)= 0; //sets new seed
 
-		virtual void human_input()= 0; //takes input from human
+		virtual int human_input()= 0; //takes input from human
 	};
 }
 
