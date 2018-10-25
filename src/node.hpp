@@ -3,9 +3,7 @@
 
 #include <vector>
 #include <memory>
-#include <cmath>
 #include <iostream>
-
 
 /* - - - - - - - - - - - - - - - - - */
 // Declaration of the template class //
@@ -17,29 +15,36 @@ class Node {
 
 public:
 
+  // Shared pointer to Node class type
   typedef typename std::shared_ptr< Node<Game,Move> > NodePointerType;
 
   /* Costructors */
-
   Node(void);
   Node(const Game&);
+
+  /* Copy-assigment e copy-costructor (maybe they shouldn't be default...)*/
+  Node<Game,Move>& operator = (const Node<Game,Move>&) = default;
   Node(const Node&) = default;
 
-  /* Copy-assigment */
+  /* List of public methods */
 
-  Node<Game,Move>& operator = (const Node<Game,Move>&) = default;
-
-  /* Methods */
-
+  //  Update the score and the visits of the node
   void update(double);
   void update(double, unsigned);
+
+  // True if all moves have been tried (vector of moves is empty)
   bool all_moves_tried(void) const;
+
+  // True if the node has children (vector of children not null)
   bool has_children(void) const;
+
+  // Adds a new child, built applying the input move to the current game state
   NodePointerType make_child(const Move&);
+
+  // Print info (DEBUG)
   void print_node(void) const;
 
   /* Getters */
-
   double get_wins(void) const { return wins; }
   unsigned get_visits(void) const { return visits; }
   const Node* get_parent(void) const { return parent; }
@@ -55,26 +60,29 @@ public:
 
 private:
 
-  Game game_state;
-  Node* parent;
-  Move last_move;     // Which method has to be modified? Can it stay undefined?
-                      // Should define a null move? Should we specify is it's a starting config?
-
-  std::vector< NodePointerType > children;
-  std::vector< Move > possible_moves;
+  // Deletes the input move from the vector of available moves
   void erase_move(const Move&);
 
-  int player;
+  /* List of private members */
 
+  Game game_state;
+  Node* parent;
+  Move last_move;
+  std::vector< NodePointerType > children;
+  std::vector< Move > possible_moves;
+  int player;
   double wins;
   unsigned visits;
 
 };
 
-
 /* - - - - - - - - - - - - - - - - - */
 // Definition of methods             //
 /* - - - - - - - - - - - - - - - - - */
+
+// *************
+// Constructors:
+// *************
 
 template<class Game, class Move>
 Node<Game,Move>::Node():
@@ -93,6 +101,10 @@ Node<Game,Move>::Node(const Game& input_game):
     possible_moves = game_state.get_actions();
     visits = 0;
   }
+
+// ********
+// Methods:
+// ********
 
 template<class Game, class Move>
 void

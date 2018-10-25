@@ -17,6 +17,7 @@ namespace game {
 	class NoActionsLeft{}; //if no actions are left
 	class GameNotOver{}; //if the game is not over and we want a utility value
 	class IllegalAction{}; //if the action is not legal
+	class NoActionPlayed{}; //if no action has been played
 
 	template <class Action>
 	class Game {
@@ -36,6 +37,8 @@ namespace game {
 		virtual int evaluate()= 0; //returns the utility as an integer if state is terminal, otherwise throws error
 
 		virtual void set_seed(int new_seed)= 0; //sets new seed
+
+		virtual int human_input()= 0; //takes input from human
 	};
 }
 

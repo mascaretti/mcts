@@ -102,11 +102,10 @@ nim %>%
   mutate(PLAYER = as_factor(PLAYER)) %>%
   ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
   geom_boxplot() +
-  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4) +
-  labs(title = "Boxplot of the number of wins at Nim according to the player")
+  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4)
 
 #Save plot
-ggsave("./test/analysis/nim_boxplot.png", width = def_width, height = def_height)
+ggsave("./test/analysis/nim_boxplot.png", width = 5, height = 3)
 
 #OXO-------------------------------
 
@@ -132,11 +131,10 @@ oxo %>%
   ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
   geom_boxplot() +
   geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4) +
-  geom_hline(yintercept = as.numeric(oxo_ran_victories[1]), linetype = "dashed", colour = "red", show.legend = TRUE) +
-  labs(title = "Boxplot of the number of wins at Tic-tac-toe according to the player")
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[1]), linetype = "dashed", colour = "red", show.legend = TRUE)
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_wins.png", width = def_width, height = def_height)
+ggsave("./test/analysis/oxo_boxplot_wins.png", width = 5, height = 3)
 
 #Draws
 oxo %>%
@@ -145,11 +143,10 @@ oxo %>%
   ggplot(mapping = aes(x = PLAYER, y = N_DRAW)) +
   geom_boxplot() +
   geom_jitter(mapping = aes(size = IN_ITER), colour = "blue", width = 0.2, alpha = 0.4) +
-  geom_hline(yintercept = as.numeric(oxo_ran_victories[2]), linetype = "dashed", colour = "blue", show.legend = TRUE) +
-  labs(title = "Boxplot of the number of draws at Tic-tac-toe according to the player")
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[2]), linetype = "dashed", colour = "blue", show.legend = TRUE)
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_draws.png", width = def_width, height = def_height)
+ggsave("./test/analysis/oxo_boxplot_draws.png", width = 5, height = 3)
 
 #Losses
 oxo %>%
@@ -158,11 +155,10 @@ oxo %>%
   ggplot(mapping = aes(x = PLAYER, y = N_LOSS)) +
   geom_boxplot() +
   geom_jitter(mapping = aes(size = IN_ITER), colour = "green", width = 0.2, alpha = 0.4) +
-  geom_hline(yintercept = as.numeric(oxo_ran_victories[3]), linetype = "dashed", colour = "green", show.legend = TRUE) +
-  labs(title = "Boxplot of the number of losses at Tic-tac-toe according to the player")
+  geom_hline(yintercept = as.numeric(oxo_ran_victories[3]), linetype = "dashed", colour = "green", show.legend = TRUE)
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_losses.png", width = def_width, height = def_height)
+ggsave("./test/analysis/oxo_boxplot_losses.png", width = 5, height = 3)
 
 
 #Plotting for the first Oxo player
