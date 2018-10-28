@@ -11,20 +11,34 @@ namespace game {
 	class OxoGame: public Game<OxoAction> {
 
 		using Action= OxoAction;
-			/*The class Oxo implements the usual 3x3 tic-tac-toe board*/
+			//The class Oxo implements a 3x3 tic-tac-toe board
+
 		private:
+			//to check if the game is over
 			bool is_terminal{false};
+
+			//to check if the game has begun
 			bool no_move_played{true};
+
+			//to know who will play *next*
 			int agent_id{1};
 
+			//the board
 			std::array<std::array<int, 3>, 3> board;
+
+			//the last action played
 			Action last_action;
 
+			//to know if we have a winner already
 			bool winner_exists{false};
 
+			//seed for the random action generation
 			int random_action_seed{0};
+
+			//random engine
 			std::default_random_engine gen;
 
+			//method to updated the terminal status given the status of the board
 			void update_terminal_status()  {
 				//check if there is a winner
 				//row-wise
@@ -81,6 +95,7 @@ namespace game {
 			};
 
 
+			//method to help printing the status of the board
 			char print_helper(int value) {
 				char tmp;
 				if (value == 0)
@@ -96,31 +111,37 @@ namespace game {
 
 		public:
 
+			//default constructor
 			OxoGame() {
 				board[0]= {{0, 0, 0}};
 				board[1]= {{0, 0, 0}};
 				board[2]= {{0, 0, 0}};
 				};
 
-
+			//constructor taking a seed
 			OxoGame(int seed): random_action_seed{seed}, gen(seed)  {
 				board[0]= {{0, 0, 0}};
 				board[1]= {{0, 0, 0}};
 				board[2]= {{0, 0, 0}};
 			}
 
+			//copy constructor
 			OxoGame(const OxoGame& other)= default;
 
+			//assignment operator
 			OxoGame& operator=(const OxoGame& other)= default;
 
+			//method to know whether the game is over
 			virtual bool get_terminal_status() override {
 				return is_terminal;
 			}; //true if current state is terminal
 
+			//method to know what agen will play *next*
 			virtual int get_agent_id() override {
 				return agent_id;
 			}; //returns the agent who is about to make a decision
 
+			//Method to apply an action and update the status of the board
 			virtual void apply_action(const Action& action) override {
 				//Checking if the action has not been played before
 				if (board[action.row][action.column] != 0)
@@ -151,6 +172,7 @@ namespace game {
 
 			}; //returns void, but changes the internal state
 
+			//Method to know what legal actions it is possible to play
 			virtual std::vector<Action> get_actions() const override {
 
 				//check if actions available
@@ -170,6 +192,7 @@ namespace game {
 				return action_vector;
 			}; //returns a vector of legal action at current state
 
+			//Method returning a legal action
 			virtual Action random_action() override {
 				if (is_terminal == true)
 					throw NoRandomActions{};
@@ -184,6 +207,7 @@ namespace game {
 		   		return get_actions()[random_index];
 			}; //returns a random action legal at the current state
 
+			//Method returning the utility if the status of the game is a terminal node
 			virtual int evaluate() override {
 				if ((is_terminal == false) and (winner_exists == false))
 					throw GameNotOver{};
@@ -193,6 +217,7 @@ namespace game {
 					return (agent_id == 1) ? -1 : 1;
 			}; //returns the utility as an integer if state is terminal, otherwise throws error
 
+			//Method to print the board of the game
 			void print_board() {
 				std::cout << print_helper(board[0][0]) << " | " << print_helper(board[0][1]) << " | " << print_helper(board[0][2]) << '\n';
 				std::cout << "---------" << '\n';
@@ -201,12 +226,14 @@ namespace game {
 				std::cout << print_helper(board[2][0]) << " | " << print_helper(board[2][1]) << " | " << print_helper(board[2][2]) << '\n';
 			};
 
+			//Method to set a new seed
 			virtual void set_seed(int new_seed) override {
 				random_action_seed= new_seed;
 				gen.seed(random_action_seed);
 			}; //sets new seed
 
 
+			//Method to print the status of the current move of the game and the situation
 			void print() {
 				std::cout << "**************************************" << '\n';
 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
@@ -225,12 +252,14 @@ namespace game {
 			}; //for debugging
 
 
+			//Method to get the last action played
 			Action get_last_action() const {
 				if (no_move_played == true)
 					throw NoActionPlayed{};
 				return last_action;
 			};
 
+			//Method to allow input from a human player
 			virtual int human_input() override {
 				auto actions = get_actions();
 				bool correct_move{false};

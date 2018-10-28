@@ -13,20 +13,35 @@ namespace game {
 
 		template <unsigned int N1= 7u, unsigned N2= 7u, unsigned N3= 7u>
 		class NimGame: public Game<NimAction> {
+		//The NimGame class is a template class, creating a 3-pile Nim game
+		//in which the number of cards per pile is given by the template parameters.
+
 			using Action= NimAction;
 			using NimBoard= std::array<unsigned int, 3>;
 
 		private:
+			//to check if the game is over
 			bool is_terminal{false};
+
+			//to check if the game has begun
 			bool no_move_played{true};
+
+			//Agent that moves next
 			int agent_id{1};
+
+			//Last action played
 			Action last_action;
 
+			//Seed for the random action method
 			int random_action_seed{0};
+
+			//Random engine for the random action method
 			std::default_random_engine gen;
 
+			//Board of the game
 			NimBoard board{{N1, N2, N3}};
 
+			//Method to check if the game is over given the status of the board
 			void update_terminal_status()  {
 				if ((board[0] == 0u) and (board[1] == 0u) and (board[2] == 0u))
 					is_terminal= true;
@@ -35,22 +50,31 @@ namespace game {
 			};
 
 		public:
+			
+			//Default constructor
 			NimGame()= default;
 
+			//Constructor taking a seed
 			NimGame(int seed): random_action_seed{seed} {};
 
+			//Copy constructor
 			NimGame(const NimGame& Other)= default;
 
+			//Assignment operator
 			NimGame& operator=(const NimGame& Other)= default;
 
+			//Method returning if the game is over
 			virtual bool get_terminal_status() override {
 				return is_terminal;
 			}; //true if current state is terminal
 
+			//Method returning the player moving *next*
 			virtual int get_agent_id() override {
 				return agent_id;
 			}; //returns the agent who is about to make a decision
 
+
+			//Method taking an action as an input and updating the status of the board
 			virtual void apply_action(const Action& action) override {
 				//Check if the action to be played is legal
 				if (board[action.pile] < action.number)
@@ -73,6 +97,7 @@ namespace game {
 				last_action= action;
 			};
 
+			//Method returning the set of viable action given the current board status
 			virtual std::vector<Action> get_actions() const override {
 
 				//check if actions available
@@ -92,6 +117,7 @@ namespace game {
 				return action_vector;
 			}
 
+			//Method returning a legal random action
 			virtual Action random_action() override {
 				if (is_terminal == true)
 					throw NoRandomActions{};
@@ -104,6 +130,7 @@ namespace game {
 		   		return get_actions()[random_index];
 			}; //returns a random action legal at the current state
 
+			//Method returning the utility at the terminal node if we are at a terminal node
 			virtual int evaluate() override {
 				if (is_terminal == false)
 					throw GameNotOver{};
@@ -111,12 +138,14 @@ namespace game {
 					return (agent_id == 1) ? -1 : 1;
 			}; //returns the utility as an integer if state is terminal, otherwise throws error
 
+			//Method to set a new seed for random actions
 			virtual void set_seed(int new_seed) override {
 				random_action_seed= new_seed;
 				gen.seed(random_action_seed);
 			}; //sets new seed
 
 
+			//Method to print the status of the game at this action
 			void print() {
 				std::cout << "**************************************" << '\n';
 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
@@ -132,22 +161,25 @@ namespace game {
 				else
 					std::cout << "Now up to: " << get_agent_id() << '\n';
 				std::cout << "**************************************" << '\n';
-			}; //for debugging
+			};
+	
 
-
+			//Method to get the last action played
 			Action get_last_action() const {
 				if (no_move_played == true)
 					throw NoActionPlayed{};
 				return last_action;
 			};
 
-
+				
+			//Method to print the status of the board			
 			void print_board() {
 				std::cout << "Position 0: " << " " << board[0] << '\n';
 				std::cout << "Poistion 1: " << " " << board[1] << '\n';
 				std::cout << "Poistion 2: " << " " << board[2] << '\n';
 			}; //print the value as string
 
+			//Method to input a move from a human player
 			virtual int human_input() override {
 				auto actions = get_actions();
 				bool correct_move{false};

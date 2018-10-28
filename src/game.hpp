@@ -11,7 +11,7 @@
 
 namespace game {
 
-	/*The following classes are used to throw errors when one occurs*/
+	//The following classes are used to throw errors when one occurs
 	class ActionAlreadyPlayed{}; //to throw an error if the action has been played
 	class NoRandomActions{}; //to throw an error if there are no random actions possible?
 	class NoActionsLeft{}; //if no actions are left
@@ -21,7 +21,7 @@ namespace game {
 
 	template <class Action>
 	class Game {
-		/*The class Game implements the interface of game*/
+		//The class Game implements the interface of game
 	public:
 
 		virtual bool get_terminal_status()= 0; //true if current state is terminal
