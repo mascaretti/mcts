@@ -1,0 +1,26 @@
+CXX = mpicxx.bat
+CXXFLAGS = -cxx=icl -std=c++14
+
+SRCS = statistics.cpp ../src/action.cpp
+OBJS = statistics.obj ../src/action.obj
+HEADERS = ../src/monte_carlo_search_tree.hpp ../src/node.hpp ../src/oxo.hpp ../src/nim.hpp ../src/action.hpp ../src/game.hpp
+EXEC = statistics.exe
+
+.PHONY = all clean distclean
+
+all: $(EXEC)
+
+clean:
+	-rm -f $(OBJS)
+
+distclean:
+	-rm -f $(EXEC) $(OBJS)
+
+../src/action.obj: ../src/action.cpp $(HEADERS)
+	mpicxx.bat -cxx=icl -std=c++14 -Wall -c ../src/action.cpp $(HEADERS) -o ../src/action.obj
+
+statistics.obj: statistics.cpp $(HEADERS)
+	mpicxx.bat -cxx=icl -std=c++14 -Wall -c statistics.cpp $(HEADERS) -o statistics.obj
+	
+statistics.exe: statistics.obj ../src/action.obj
+	mpicxx.bat -cxx=icl -std=c++14 -Wall statistics.obj ../src/action.obj -o statistics.exe
