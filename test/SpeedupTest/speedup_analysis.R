@@ -1,5 +1,5 @@
 # Initialization ---------------
-setwd("./PACS/virtual/apc")
+setwd("/vagrant/apc")
 library(tidyverse)
 
 height <- 3
@@ -15,7 +15,7 @@ ggplot(nim, mapping = aes(x = simulation, y = elapsed, colour = size)) +
   geom_point(alpha = 0.2, position = "jitter") +
   geom_smooth(se = TRUE)
 
-ggsave(filename = "./test/SpeedupTest/speedup_nim.png", height = height, width = width)
+ggsave(filename = "./test/SpeedupTest/plots/speedup_nim.png", height = height, width = width)
 
 # Oxo -------------------------------
 
@@ -28,7 +28,7 @@ ggplot(oxo, mapping = aes(x = simulation, y = elapsed, colour = size)) +
   geom_point(alpha = 0.2, position = "jitter") +
   geom_smooth(se = TRUE)
 
-ggsave(filename = "./test/SpeedupTest/speedup_oxo.png", height = height, width = width)
+ggsave(filename = "./test/SpeedupTest/plots/speedup_oxo.png", height = height, width = width)
 
 
 # Speed-up --------
@@ -50,7 +50,7 @@ grouped_nim <- add_column(grouped_nim, speed_up = speed_nim)
 ggplot(grouped_nim, mapping = aes(x = simulation, y = speed_up, colour = size)) +
   geom_smooth(se = FALSE)
 
-ggsave(filename = "./test/SpeedupTest/nim_speed.png", height = height, width = width)
+ggsave(filename = "./test/SpeedupTest/plots/nim_speed.png", height = height, width = width)
 
 grouped_oxo <- oxo %>%
   group_by(size, simulation) %>%
@@ -68,4 +68,4 @@ grouped_oxo <- add_column(grouped_oxo, speed_up = speed_oxo)
 ggplot(grouped_oxo, mapping = aes(x = simulation, y = speed_up, colour = size)) +
   geom_smooth(se = FALSE)
 
-ggsave(filename = "./test/SpeedupTest/oxo_speed.png", height = height, width = width)
+ggsave(filename = "./test/SpeedupTest/plots/oxo_speed.png", height = height, width = width)
