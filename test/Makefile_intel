@@ -21,6 +21,6 @@ distclean:
 
 statistics.obj: statistics.cpp $(HEADERS)
 	mpicxx.bat -cxx=icl -std=c++14 -Wall -c statistics.cpp $(HEADERS) -o statistics.obj
-	
+
 statistics.exe: statistics.obj ../src/action.obj
 	mpicxx.bat -cxx=icl -std=c++14 -Wall statistics.obj ../src/action.obj -o statistics.exe

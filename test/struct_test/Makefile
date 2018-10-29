@@ -1,5 +1,4 @@
 CXX = mpicxx
-CXXFLAGS = -std=c++11 -Wall -g
 
 WARNFLAGS = -Wall
 STANDARD = -std=c++11
@@ -31,7 +30,7 @@ test_node.o test_oxo_tree.o: ../../src/oxo.hpp
 test_oxo_tree.o test_nim_tree.o: ../../src/monte_carlo_search_tree.hpp
 test_nim_tree.o: ../../src/nim.hpp
 
-.PHONY = all clean distclean run_parallel
+.PHONY = all clean distclean run
 
 all: $(EXEC)
 

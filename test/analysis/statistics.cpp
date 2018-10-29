@@ -1,6 +1,6 @@
-#include "../src/monte_carlo_search_tree.hpp"
-#include "../src/oxo.hpp"
-#include "../src/nim.hpp"
+#include "../../src/monte_carlo_search_tree.hpp"
+#include "../../src/oxo.hpp"
+#include "../../src/nim.hpp"
 
 #include <fstream>
 #include <ctime>
