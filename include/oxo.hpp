@@ -209,9 +209,9 @@ namespace game {
 
 			//Method returning the utility if the status of the game is a terminal node
 			virtual int evaluate() override {
-				if ((is_terminal == false) and (winner_exists == false))
+				if ((is_terminal == false) && (winner_exists == false))
 					throw GameNotOver{};
-				if ((is_terminal == true) and (winner_exists == false))
+				if ((is_terminal == true) && (winner_exists == false))
 					return 0;
 				else
 					return (agent_id == 1) ? -1 : 1;
@@ -278,7 +278,7 @@ namespace game {
 
 				std::cin >> input;
 
-				if (input >= 1 and input <= num_moves)
+				if ((input >= 1) && (input <= num_moves))
 					correct_move= true;
 
 				else

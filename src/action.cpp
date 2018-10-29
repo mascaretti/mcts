@@ -57,7 +57,7 @@ namespace game {
 
 		//Equality operator, checking if two actions share the same properties
 		bool NimAction::operator==(const NimAction& rhs) const {
-			if ((pile == rhs.pile) and (number == rhs.number))
+			if ((pile == rhs.pile) && (number == rhs.number))
 				return true;
 			else
 				return false;

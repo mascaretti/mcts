@@ -3,7 +3,7 @@
 
 #include "node.hpp"
 #include <random>
-#include <mpi.h>
+#include "C:\Program Files (x86)\IntelSWTools\mpi\2019.0.117\intel64\include\mpi.h"
 #include <chrono>
 #include <algorithm>
 #include <cmath>
