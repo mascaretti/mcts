@@ -11,8 +11,13 @@ int outer_it1 = 10, inner_it1 = 10;
 int outer_it2 = 10, inner_it2 = 10;
 
 MPI_Init(nullptr, nullptr);
-int rank;
+int rank, size;
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+MPI_Comm_size(MPI_COMM_WORLD, &size);
+if (rank == 0) {
+  // DEBUG
+  std::cout << size << std::endl;
+}
 
 Oxo oxo_board;
 Move current_player_move;

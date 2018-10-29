@@ -18,10 +18,10 @@ endif
 
 .PHONY: all clean
 
-all: obj/action.o
+all: src/action.o
 
-obj/action.o: src/action.cpp include/action.hpp
+obj/action.o: src/action.cpp src/action.hpp
 	$(CXX) $(CXXFLAGS) $(OPTFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	$(RM) obj/action.o
+	$(RM) src/action.o

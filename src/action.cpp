@@ -1,5 +1,5 @@
 #include <utility>
-#include "../include/action.hpp"
+#include "action.hpp"
 #include <iostream>
 
 namespace game {
