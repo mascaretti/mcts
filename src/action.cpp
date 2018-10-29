@@ -1,5 +1,5 @@
 #include <utility>
-#include "action.hpp"
+#include "../include/action.hpp"
 #include <iostream>
 
 namespace game {
@@ -33,7 +33,7 @@ namespace game {
 	}
 
 	namespace Nim {
-		
+
 		//Constructor taking a pair as an input. Optionally asserting if the number of cards taken is positive
 		NimAction::NimAction(std::pair<unsigned int, unsigned int> input): pile{input.first}, number{input.second} {
 			assert(number > 0);

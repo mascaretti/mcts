@@ -82,13 +82,15 @@ private:
   NodePointerType root;
   NodePointerType current_game_node;
   int seed;
-  std::chrono::steady_clock rng_time;
-  int seed_increment = 0;
   std::default_random_engine rng;
   int is_parallel = 0;
   unsigned outer_iter;
   unsigned inner_iter;
   double ucb_constant = sqrt(2.0);
+
+  // Utilities for seed generation
+  std::chrono::steady_clock rng_time;
+  int seed_increment = 0;
 
 };
 
@@ -152,7 +154,10 @@ template<class Game, class Move>
 double
 MonteCarloSearchTree<Game,Move>::compute_ucb(const NodePointerType& target_node) const
 {
+
+  // DEBUG
   assert ( target_node->get_visits()>0 );
+
   return ( target_node->get_wins() / (double)(target_node->get_visits()) ) +
     ucb_constant * sqrt( log( (double)(target_node->get_parent()->get_visits()) )
     / (double)(target_node->get_visits()) );
@@ -182,7 +187,10 @@ MonteCarloSearchTree<Game,Move>::select() const
 {
   NodePointerType selected_node = current_game_node;
   while( selected_node->all_moves_tried() && selected_node->has_children() ) {
+
+    // DEBUG
     assert( best_child_ucb(selected_node)!=nullptr );
+
     selected_node = best_child_ucb(selected_node);
   }
   return selected_node;
