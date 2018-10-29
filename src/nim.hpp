@@ -43,7 +43,7 @@ namespace game {
 
 			//Method to check if the game is over given the status of the board
 			void update_terminal_status()  {
-				if ((board[0] == 0u) and (board[1] == 0u) and (board[2] == 0u))
+				if ((board[0] == 0u) && (board[1] == 0u) && (board[2] == 0u))
 					is_terminal= true;
 				else
 					is_terminal= false;
@@ -197,7 +197,7 @@ namespace game {
 
 				std::cin >> input;
 
-				if (input >= 1 and input <= actions.size())
+				if ((input >= 1) && (input <= actions.size()))
 					correct_move= true;
 				else
 					std::cout << "Move not allowed, human. Try again.";
