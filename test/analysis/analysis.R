@@ -5,7 +5,7 @@ library(forcats)
 
 #Setting the current workind directory
 #setwd("~/PACS/virtual/apc")
-setwd("~/PACS/apc")
+setwd("/vagrant/apc")
 
 #Reading the dataset
 results <- read_csv("./test/data_games.csv", col_names = TRUE)
@@ -34,7 +34,7 @@ nim %>%
   geom_hline(yintercept = nim_ran_victories, linetype = "dashed", colour = "red") +
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Nim")
 #Save plot
-ggsave("./test/analysis/nim_01.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/nim_01.png", width = def_width, height = def_height)
 
 
 nim %>%
@@ -46,7 +46,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Nim")
 
 #Save plot
-ggsave("./test/analysis/nim_01_points.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/nim_01_points.png", width = def_width, height = def_height)
 
 nim %>%
   filter(PLAYER == 1) %>%
@@ -56,7 +56,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "% Performance increase", title = "Performance increase of Player 1 at Nim")
 
 #Save plot
-ggsave("./test/analysis/nim_01_pi.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/nim_01_pi.png", width = def_width, height = def_height)
 
 
 
@@ -69,7 +69,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Nim")
 
 #Save plot
-ggsave("./test/analysis/nim_02.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/nim_02.png", width = def_width, height = def_height)
 
 nim %>%
   filter(PLAYER == 2) %>%
@@ -80,7 +80,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Nim")
 
 #Save plot
-ggsave("./test/analysis/nim_02_points.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/nim_02_points.png", width = def_width, height = def_height)
 
 
 
@@ -92,7 +92,7 @@ nim %>%
   labs(x = "Number of roll-outs", y = "% Performance increase", title = "Performance increase of Player 2 at Nim")
 
 #Save plot
-ggsave("./test/analysis/nim_02_pi.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/nim_02_pi.png", width = def_width, height = def_height)
 
 
 #Checking if the number of wins changes
@@ -105,7 +105,7 @@ nim %>%
   geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4)
 
 #Save plot
-ggsave("./test/analysis/nim_boxplot.png", width = 5, height = 3)
+ggsave("./test/analysis/plot/nim_boxplot.png", width = 5, height = 3)
 
 #OXO-------------------------------
 
@@ -134,7 +134,7 @@ oxo %>%
   geom_hline(yintercept = as.numeric(oxo_ran_victories[1]), linetype = "dashed", colour = "red", show.legend = TRUE)
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_wins.png", width = 5, height = 3)
+ggsave("./test/analysis/plot/oxo_boxplot_wins.png", width = 5, height = 3)
 
 #Draws
 oxo %>%
@@ -146,7 +146,7 @@ oxo %>%
   geom_hline(yintercept = as.numeric(oxo_ran_victories[2]), linetype = "dashed", colour = "blue", show.legend = TRUE)
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_draws.png", width = 5, height = 3)
+ggsave("./test/analysis/plot/oxo_boxplot_draws.png", width = 5, height = 3)
 
 #Losses
 oxo %>%
@@ -158,7 +158,7 @@ oxo %>%
   geom_hline(yintercept = as.numeric(oxo_ran_victories[3]), linetype = "dashed", colour = "green", show.legend = TRUE)
 
 #Save plot
-ggsave("./test/analysis/oxo_boxplot_losses.png", width = 5, height = 3)
+ggsave("./test/analysis/plot/oxo_boxplot_losses.png", width = 5, height = 3)
 
 
 #Plotting for the first Oxo player
@@ -171,7 +171,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 1 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_win_01.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/oxo_win_01.png", width = def_width, height = def_height)
 
 #draws
 oxo %>%
@@ -184,7 +184,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of Draws", title = "Draws of Player 1 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_draw_01.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/oxo_draw_01.png", width = def_width, height = def_height)
 
 
 #losses
@@ -198,7 +198,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of losses", title = "Losses of Player 1 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_loss_01.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/oxo_loss_01.png", width = def_width, height = def_height)
 
 
 #Plotting for the second Oxo player
@@ -212,7 +212,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of wins", title = "Wins of Player 2 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_win_02.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/oxo_win_02.png", width = def_width, height = def_height)
 
 #draws
 oxo %>%
@@ -225,7 +225,7 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of Draws", title = "Draws of Player 2 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_draw_02.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/oxo_draw_02.png", width = def_width, height = def_height)
 
 
 #losses
@@ -239,4 +239,4 @@ oxo %>%
   labs(x = "Number of roll-outs", y = "Number of losses", title = "Losses of Player 2 at Tic-tac-toe")
 
 #Saving the plot
-ggsave("./test/analysis/oxo_loss_02.png", width = def_width, height = def_height)
+ggsave("./test/analysis/plot/oxo_loss_02.png", width = def_width, height = def_height)
