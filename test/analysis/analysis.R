@@ -14,7 +14,7 @@ results <- read_csv("./test/data_games.csv", col_names = TRUE)
 def_width <- 10
 def_height <- 10
 
-#NIM----------------------------------------
+#NIM ----------------------------------------
 #Creating the Nim dataset
 nim <- results %>%
   filter(GAME == "nim") %>%
@@ -107,7 +107,7 @@ nim %>%
 #Save plot
 ggsave("./test/analysis/plot/nim_boxplot.png", width = 5, height = 3)
 
-#OXO-------------------------------
+#OXO -------------------------------
 
 #Create the oxo dataset
 oxo <- results %>%
