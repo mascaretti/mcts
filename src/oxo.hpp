@@ -264,7 +264,7 @@ namespace game {
 				auto actions = get_actions();
 				bool correct_move{false};
 
-				int input;
+				unsigned input;
 				auto num_moves{actions.size()};
 
 				while (correct_move == false) {
@@ -285,7 +285,7 @@ namespace game {
 					std::cout << "Move not allowed, human. Try again.";
 				}
 
-				return (input - 1);
+				return (int)(input - 1);
 			}
 	};
 

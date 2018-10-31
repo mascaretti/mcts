@@ -50,7 +50,7 @@ namespace game {
 			};
 
 		public:
-			
+
 			//Default constructor
 			NimGame()= default;
 
@@ -162,7 +162,7 @@ namespace game {
 					std::cout << "Now up to: " << get_agent_id() << '\n';
 				std::cout << "**************************************" << '\n';
 			};
-	
+
 
 			//Method to get the last action played
 			Action get_last_action() const {
@@ -171,8 +171,8 @@ namespace game {
 				return last_action;
 			};
 
-				
-			//Method to print the status of the board			
+
+			//Method to print the status of the board
 			void print_board() {
 				std::cout << "Position 0: " << " " << board[0] << '\n';
 				std::cout << "Poistion 1: " << " " << board[1] << '\n';
@@ -184,7 +184,7 @@ namespace game {
 				auto actions = get_actions();
 				bool correct_move{false};
 
-				int input;
+				unsigned input;
 
 				while (correct_move == false) {
 				std::cout << "Human: this are the moves left for you." << std::endl;
@@ -203,7 +203,7 @@ namespace game {
 					std::cout << "Move not allowed, human. Try again.";
 				}
 
-				return (input - 1);
+				return (int)(input - 1);
 			}
 		};
 	}

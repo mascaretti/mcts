@@ -66,7 +66,12 @@ private:
   /* List of private members */
 
   Game game_state;
+
+  // Here a reference may have been used instead; however, we need to initialize
+  // the parent of the root node to a "null" state (nullptr in this case),
+  // which is not possible with a reference
   Node* parent;
+
   Move last_move;
   std::vector< NodePointerType > children;
   std::vector< Move > possible_moves;

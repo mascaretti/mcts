@@ -84,14 +84,18 @@ private:
 
   NodePointerType root;
   NodePointerType current_game_node;
-  int seed;
-  std::default_random_engine rng;
+
+  // This is not a boolean for the simple fact that it has to be passed via reference
+  // to the function MPI_Initialized, which takes a ref. to int as input
   int is_parallel = 0;
+
   unsigned outer_iter;
   unsigned inner_iter;
   double ucb_constant = sqrt(2.0);
 
   // Utilities for seed generation
+  int seed;
+  std::default_random_engine rng;
   std::chrono::steady_clock rng_time;
   int seed_increment = 0;
 
@@ -252,7 +256,7 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf)
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     unsigned local_iter = inner_iter/size;
-    unsigned reminder = inner_iter%size;
+    int reminder = inner_iter%size;
     if (rank<reminder) local_iter++;
     for (unsigned i = 0; i<local_iter; ++i) {
       Game temp_game = current_leaf->get_game();
@@ -288,6 +292,7 @@ MonteCarloSearchTree<Game,Move>::back_propagation(NodePointerType current_leaf, 
   current_leaf->update(score, inner_iter);
   Node<Game,Move>* temp_ptr = current_leaf->get_parent();
   while ( temp_ptr!=nullptr ) {
+    // Sure? not really, actually... REVIEW!
     temp_ptr->update(score, inner_iter);
     temp_ptr = temp_ptr->get_parent();
   }
