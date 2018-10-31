@@ -14,28 +14,33 @@
 
 Optional:
 - R (for data analysis and plots)
-  * tidydiverse package
-  * forecats package
+  * *tidydiverse* package
+  * *forecats* package
 
 ## Compiling
 
-- Run `$ make [options]` in the main directory. Selecting `DEBUG=yes` (`DEBUG=no`) enables (disable) debugging (with GDB, for instance)
+- Run `$ make [options]` in the main directory.
+  * Selecting `DEBUG=yes` (`DEBUG=no`) enables (disable) debugging (with GDB, for instance)
 
 - To compile the example scripts
-  `$ cd example`
-  `$ make [options]`
+  * `$ cd example`
+  * `$ make [options]`
 
 - To compile the testing scripts
-  `$ cd test/[test_name]`
-  `$ make [options]`
+  * `$ cd test/[test_name]`
+  * `$ make [options]`
 
 ## Running
 
-Run `$ make run [options]` to run the parallel script. Setting `NP=n_cores` changes the number of processes and `DEFAULT_EXEC=exec` changes the executable to run.
+- Run: `$ make run [options]` to run the parallel script.
+  * Setting `NP=n_cores` changes the number of processes
+  * `DEFAULT_EXEC=exec` changes the executable to run.
 
-In the speedup_test folder, run `test_gen.sh` to run all the tests in the folder.
+- Test:
+  * run `test_gen.sh` to run all the tests in the folder **speedup_test**.
 
-Otherwise, run `$ ./[executable]` to execute the serial script.
+- Serial: 
+  * run `$ ./[executable]` to execute the serial script.
 
 ## Description
 
