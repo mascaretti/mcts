@@ -9,13 +9,13 @@
 
 ## Requirements
 
-- C++11 compiler (tested of g++ and clang)
+- C++11 compiler (tested with g++ and clang)
 - MPI (for parallelization)
 
 Optional:
 - R (for data analysis and plots)
-    -tidydiverse package
-    -forecats package
+  * tidydiverse package
+  * forecats package
 
 ## Compiling
 
