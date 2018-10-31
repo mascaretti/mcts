@@ -7,8 +7,9 @@
 #include <algorithm>
 #include <cmath>
 
-// #include "C:\Program Files (x86)\IntelSWTools\mpi\2019.0.117\intel64\include\mpi.h"
 #include <mpi.h>
+// It may not work foe Windows; try something like:
+// #include "C:\Program Files (x86)\IntelSWTools\mpi\2019.0.117\intel64\include\mpi.h"
 
 // DEBUG
 #include <cassert>
@@ -357,7 +358,7 @@ void MonteCarloSearchTree<Game,Move>::set_rand_seed()
   if ( is_parallel ) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    seed = ( (int)((diff.count())*100) + seed_increment );
+    seed = ( (int)((diff.count())*100) + rank*10 + seed_increment );
   }
   else
     seed = ( (int)((diff.count())*100) + seed_increment );
@@ -372,7 +373,7 @@ int MonteCarloSearchTree<Game,Move>::gen_rand_seed()
   if ( is_parallel ) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    return ( seed + seed_increment );
+    return ( seed + seed_increment + rank*10 );
   }
   else
     return ( seed + seed_increment );

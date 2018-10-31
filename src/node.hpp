@@ -10,7 +10,6 @@
 /* - - - - - - - - - - - - - - - - - */
 
 template<class Game, class Move>
-// template<class Game>
 class Node {
 
 public:
@@ -22,9 +21,10 @@ public:
   Node(void);
   Node(const Game&);
 
-  /* Copy-assigment e copy-costructor (maybe they shouldn't be default...)*/
-  Node<Game,Move>& operator = (const Node<Game,Move>&) = default;
-  Node(const Node&) = default;
+  // For the moment copy assignment and costructors are prevented
+  // In future deep-copy costructor and assignment may be implemented
+  Node<Game,Move>& operator = (const Node<Game,Move>&) = delete;
+  Node(const Node&) = delete;
 
   /* List of public methods */
 
