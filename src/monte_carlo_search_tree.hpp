@@ -167,7 +167,7 @@ MonteCarloSearchTree<Game,Move>::compute_ucb(const NodePointerType& target_node)
 }
 
 template<class Game, class Move>
-typename Node<Game,Move>::NodePointerType  /* ??? */
+typename MonteCarloSearchTree<Game,Move>::NodePointerType /* ??? */
 MonteCarloSearchTree<Game,Move>::best_child_ucb(const NodePointerType& target_parent) const
 {
   std::vector<NodePointerType> children = target_parent->get_children();
@@ -185,7 +185,7 @@ MonteCarloSearchTree<Game,Move>::best_child_ucb(const NodePointerType& target_pa
 }
 
 template<class Game, class Move>
-typename Node<Game,Move>::NodePointerType  /* ??? */
+typename MonteCarloSearchTree<Game,Move>::NodePointerType /* ??? */
 MonteCarloSearchTree<Game,Move>::select() const
 {
   NodePointerType selected_node = current_game_node;
@@ -351,7 +351,8 @@ MonteCarloSearchTree<Game,Move>::change_current_status(const Move& opponent_move
 }
 
 template<class Game, class Move>
-void MonteCarloSearchTree<Game,Move>::set_rand_seed()
+void
+MonteCarloSearchTree<Game,Move>::set_rand_seed()
 {
   auto now_time = rng_time.now();
   std::chrono::duration<double> diff = now_time.time_since_epoch();
@@ -367,7 +368,8 @@ void MonteCarloSearchTree<Game,Move>::set_rand_seed()
 }
 
 template<class Game, class Move>
-int MonteCarloSearchTree<Game,Move>::gen_rand_seed()
+int
+MonteCarloSearchTree<Game,Move>::gen_rand_seed()
 {
   seed_increment++;
   if ( is_parallel ) {
@@ -380,7 +382,9 @@ int MonteCarloSearchTree<Game,Move>::gen_rand_seed()
 }
 
 template<class Game, class Move>
-void MonteCarloSearchTree<Game,Move>::print_current_status_info() const {
+void
+MonteCarloSearchTree<Game,Move>::print_current_status_info() const
+{
   current_game_node->print_node();
   std::cout << "Moves left: ";
   for( auto it = (current_game_node->get_moves()).cbegin(); it!=(current_game_node->get_moves()).cend(); it++ )
