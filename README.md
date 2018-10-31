@@ -14,8 +14,8 @@
 
 Optional:
 - R (for data analysis and plots)
-  * *tidydiverse* package
-  * *forecats* package
+  * the *tidydiverse* package
+  * the *forecats* package
 
 ## Compiling
 
