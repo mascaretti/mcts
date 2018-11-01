@@ -1,34 +1,34 @@
 # Initialization ---------------
-setwd("/vagrant/apc")
+setwd("C:/Users/ANDREA/Documents/PACS/apc/")
 library(tidyverse)
 
 height <- 3
 width <- 5.5
 
 # Nim -------------
-nim <- read_csv(file = "./test/SpeedupTest/speedup_nim.csv", col_names = FALSE,
+nim <- read_csv(file = "./test/speedup_test/speedup_nim.csv", col_names = FALSE,
                 col_types = list(col_factor(levels = c(0, 1, 2, 3, 4), ordered = TRUE), col_integer(), col_double()))
 nim <- nim %>%
   rename(size = X1, simulation = X2, elapsed = X3)
 
 ggplot(nim, mapping = aes(x = simulation, y = elapsed, colour = size)) +
   geom_point(alpha = 0.2, position = "jitter") +
-  geom_smooth(se = TRUE)
+  geom_smooth(se = TRUE, method = "lm", formula = y ~ x)
 
-ggsave(filename = "./test/SpeedupTest/plots/speedup_nim.png", height = height, width = width)
+ggsave(filename = "./test/speedup_test/plots/speedup_nim.png", height = height, width = width)
 
 # Oxo -------------------------------
 
-oxo <- read_csv(file = "./test/SpeedupTest/speedup_oxo.csv", col_names = FALSE,
+oxo <- read_csv(file = "./test/speedup_test/speedup_oxo.csv", col_names = FALSE,
                 col_types = list(col_factor(levels = c(0, 1, 2, 3, 4), ordered = TRUE), col_integer(), col_double()))
 oxo <- oxo %>%
   rename(size = X1, simulation = X2, elapsed = X3)
 
 ggplot(oxo, mapping = aes(x = simulation, y = elapsed, colour = size)) +
   geom_point(alpha = 0.2, position = "jitter") +
-  geom_smooth(se = TRUE)
+  geom_smooth(se = TRUE, method = "lm", formula = y ~ x)
 
-ggsave(filename = "./test/SpeedupTest/plots/speedup_oxo.png", height = height, width = width)
+ggsave(filename = "./test/speedup_test/plots/speedup_oxo.png", height = height, width = width)
 
 
 # Speed-up --------
@@ -48,9 +48,10 @@ speed_nim <- unlist(c(zero_nim, one_nim, two_nim, three_nim, four_nim))
 
 grouped_nim <- add_column(grouped_nim, speed_up = speed_nim)
 ggplot(grouped_nim, mapping = aes(x = simulation, y = speed_up, colour = size)) +
-  geom_smooth(se = FALSE)
+  geom_smooth(se = FALSE, method = "lm")
+  #geom_smooth(se = FALSE, method = "lm", formula = y ~ x)
 
-ggsave(filename = "./test/SpeedupTest/plots/nim_speed.png", height = height, width = width)
+ggsave(filename = "./test/speedup_test/plots/nim_speed.png", height = height, width = width)
 
 grouped_oxo <- oxo %>%
   group_by(size, simulation) %>%
@@ -66,6 +67,6 @@ speed_oxo <- unlist(c(zero_oxo, one_oxo, two_oxo, three_oxo, four_oxo))
 
 grouped_oxo <- add_column(grouped_oxo, speed_up = speed_oxo)
 ggplot(grouped_oxo, mapping = aes(x = simulation, y = speed_up, colour = size)) +
-  geom_smooth(se = FALSE)
+  geom_smooth(se = FALSE, method = "lm")
 
-ggsave(filename = "./test/SpeedupTest/plots/oxo_speed.png", height = height, width = width)
+ggsave(filename = "./test/speedup_test/plots/oxo_speed.png", height = height, width = width)
