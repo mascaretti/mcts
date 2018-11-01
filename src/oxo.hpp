@@ -45,7 +45,7 @@ namespace game {
 				for (int j= 0; j != 3; ++j)
 				{
 					int row_sum= board[0][j] + board[1][j] + board[2][j];
-					if (row_sum == 3 or row_sum == -3)
+					if (row_sum == 3 || row_sum == -3)
 					{
 						winner_exists= true;
 						is_terminal= true;
@@ -56,7 +56,7 @@ namespace game {
 				for (int i= 0; i != 3; ++i)
 				{
 					int col_sum= board[i][0] + board[i][1] + board[i][2];
-					if (col_sum == 3 or col_sum == -3)
+					if (col_sum == 3 || col_sum == -3)
 					{
 						winner_exists= true;
 						is_terminal= true;
@@ -65,7 +65,7 @@ namespace game {
 
 				//diagonals
 				int first_diag_sum= board[0][0] + board[1][1] + board[2][2];
-				if (first_diag_sum == 3 or first_diag_sum == -3)
+				if (first_diag_sum == 3 || first_diag_sum == -3)
 					{
 						winner_exists= true;
 						is_terminal= true;
@@ -73,7 +73,7 @@ namespace game {
 
 
 				int second_diag_sum= board[0][2] + board[1][1] + board[2][0];
-				if (second_diag_sum == 3 or second_diag_sum == -3)
+				if (second_diag_sum == 3 || second_diag_sum == -3)
 					{
 						winner_exists= true;
 						is_terminal= true;
