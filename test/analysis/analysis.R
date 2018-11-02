@@ -4,11 +4,11 @@ library(tidyverse)
 library(forcats)
 
 #Setting the current workind directory
-#setwd("~/PACS/virtual/apc")
-setwd("/vagrant/apc")
+setwd("~/Documenti/PACS/apc")
+#setwd("/vagrant/apc")
 
 #Reading the dataset
-results <- read_csv("./test/data_games.csv", col_names = TRUE)
+results <- read_csv("./test/analysis/data_games.csv", col_names = TRUE)
 
 #setting default values for printing plots
 def_width <- 10
@@ -102,7 +102,9 @@ nim %>%
   mutate(PLAYER = as_factor(PLAYER)) %>%
   ggplot(mapping = aes(x = PLAYER, y = N_WIN)) +
   geom_boxplot() +
-  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4)
+  geom_jitter(mapping = aes(size = IN_ITER), colour = "red", width = 0.2, alpha = 0.4) +
+  geom_hline(yintercept = as.numeric(nim_ran_victories), linetype = "dashed", colour = "red", show.legend = TRUE)
+
 
 #Save plot
 ggsave("./test/analysis/plot/nim_boxplot.png", width = 5, height = 3)
@@ -240,3 +242,4 @@ oxo %>%
 
 #Saving the plot
 ggsave("./test/analysis/plot/oxo_loss_02.png", width = def_width, height = def_height)
+
