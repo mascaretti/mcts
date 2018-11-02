@@ -4,6 +4,7 @@
 #include "action.hpp"
 #include "game.hpp"
 #include <iostream>
+#include <limits>
 
 namespace game {
 	namespace Oxo {
@@ -285,6 +286,8 @@ namespace game {
 					std::cout << "Move not allowed, human. Try again.";
 				}
 
+				//casting to int for later MPI usage
+				assert(input <= (unsigned int) std::numeric_limits<int>::max());
 				return (int)(input - 1);
 			}
 	};

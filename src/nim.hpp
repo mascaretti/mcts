@@ -6,6 +6,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <limits>
 
 
 namespace game {
@@ -203,6 +204,8 @@ namespace game {
 					std::cout << "Move not allowed, human. Try again.";
 				}
 
+				//casting to int for later MPI usage
+				assert(input <= (unsigned int) std::numeric_limits<int>::max());
 				return (int)(input - 1);
 			}
 		};
