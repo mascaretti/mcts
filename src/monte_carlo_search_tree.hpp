@@ -8,7 +8,7 @@
 #include <cmath>
 
 #include <mpi.h>
-// It may not work foe Windows; try something like:
+// It may not work for Windows; try something like:
 // #include "C:\Program Files (x86)\IntelSWTools\mpi\2019.0.117\intel64\include\mpi.h"
 
 // DEBUG
@@ -34,18 +34,18 @@ public:
   // Updates the pointer to the curret game state
   void change_current_status(const Move&);
 
-  /* Setters */
+  // Setters
   void set_outer_iter(unsigned it) { outer_iter = it; }
   void set_inner_iter(unsigned it) { inner_iter = it; }
   void set_ucb_constant(double c) { ucb_constant = c; }
 
-  /* Constructors */
+  // Constructors
   MonteCarloSearchTree(unsigned, unsigned);
   MonteCarloSearchTree(unsigned, unsigned, double);
   MonteCarloSearchTree(int, unsigned, unsigned);
   MonteCarloSearchTree(int, unsigned, unsigned, double);
 
-  // For the moment copy assignment and costructors are prevented
+  // For the moment copy assignment and costructors are prevented (not used)
   // In future deep-copy costructor and assignment may be implemented
   MonteCarloSearchTree& operator = (const MonteCarloSearchTree&) = delete;
   MonteCarloSearchTree(const MonteCarloSearchTree&) = delete;
@@ -53,7 +53,7 @@ public:
   // Print info (DEBUG)
   void print_current_status_info(void) const;
 
-  /* Destructor */
+  // Default destructor
   ~MonteCarloSearchTree() = default;
 
 private:
@@ -266,7 +266,7 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf)
       double result = (double)temp_game.evaluate();
       result = 0.5*(result+1) * ( current_game_node->get_player()==1 )
         + 0.5*(1-result) * ( current_game_node->get_player()==2 );
-      total_score += result;
+      total_score += result;  /* 1.0 win; 0.5 draw; 0.0 lose */
     }
     MPI_Allreduce(MPI_IN_PLACE, &total_score, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   }
@@ -279,7 +279,7 @@ MonteCarloSearchTree<Game,Move>::rollout(const NodePointerType current_leaf)
       double result = (double)temp_game.evaluate();
       result = 0.5*(result+1) * ( current_game_node->get_player()==1 )
         + 0.5*(1-result) * ( current_game_node->get_player()==2 );
-      total_score += result;
+      total_score += result;  /* 1.0 win; 0.5 draw; 0.0 lose */
     }
   }
   return total_score;
@@ -292,7 +292,6 @@ MonteCarloSearchTree<Game,Move>::back_propagation(NodePointerType current_leaf, 
   current_leaf->update(score, inner_iter);
   Node<Game,Move>* temp_ptr = current_leaf->get_parent();
   while ( temp_ptr!=nullptr ) {
-    // Sure? not really, actually... REVIEW!
     temp_ptr->update(score, inner_iter);
     temp_ptr = temp_ptr->get_parent();
   }
@@ -321,7 +320,7 @@ MonteCarloSearchTree<Game,Move>::uct_search()
 
   // Select best move
   std::vector<NodePointerType> candidate_nodes = current_game_node->get_children();
-  // Class node has to store the move where it come from!
+  // Class node has the move where it come from stored
   auto best_node_it = candidate_nodes.begin();
   for (auto it = candidate_nodes.begin(); it != candidate_nodes.end(); it++) {
     if ( ( (*it)->get_wins() )/(double)( (*it)->get_visits() ) >

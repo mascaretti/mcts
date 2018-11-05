@@ -17,20 +17,22 @@ public:
   // Shared pointer to Node class type
   typedef typename std::shared_ptr< Node<Game,Move> > NodePointerType;
 
-  /* Costructors */
+  // Costructors
   Node(void);
   Node(const Game&);
 
-  // For the moment copy assignment and costructors are prevented
-  // In future deep-copy costructor and assignment may be implemented
-  Node<Game,Move>& operator = (const Node<Game,Move>&) = delete;
+  // Copy assignment and costructors are prevented
+  // Neither of the two are used; moreover while deep-copying would be inconvenient
+  // (as it would mean to copy the whole branch below the node), shallow-copying would
+  // be risky in that it may break synchrony between children and available moves
+  Node& operator = (const Node&) = delete;
   Node(const Node&) = delete;
 
   /* List of public methods */
 
   //  Update the score and the visits of the node
-  void update(double);
-  void update(double, unsigned);
+  void update(double);              /* Only one visit, by default */
+  void update(double, unsigned);    /* More than one visit */
 
   // True if all moves have been tried (vector of moves is empty)
   bool all_moves_tried(void) const;
@@ -44,7 +46,7 @@ public:
   // Print info (DEBUG)
   void print_node(void) const;
 
-  /* Getters */
+  // Getters
   double get_wins(void) const { return wins; }
   unsigned get_visits(void) const { return visits; }
   const Node* get_parent(void) const { return parent; }
@@ -55,7 +57,7 @@ public:
   int get_player(void) const { return player; }
   Move get_last_move(void) const { return last_move; }
 
-  /* Destructor */
+  // Default destructor
   ~Node() = default;
 
 private:
@@ -68,8 +70,8 @@ private:
   Game game_state;
 
   // Here a reference may have been used instead; however, we need to initialize
-  // the parent of the root node to a "null" state (nullptr in this case),
-  // which is not possible with a reference
+  // the parent of the root node to a "null" state (nullptr in this case), which
+  // is not possible via reference
   Node* parent;
 
   Move last_move;
@@ -142,7 +144,7 @@ Node<Game,Move>::has_children() const
 }
 
 template<class Game, class Move>
-typename std::shared_ptr<Node<Game,Move>>  /* ??? */
+typename std::shared_ptr<Node<Game,Move>>
 Node<Game,Move>::make_child(const Move& next_move)
 {
   Game next_game(game_state);
