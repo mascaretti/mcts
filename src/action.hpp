@@ -5,12 +5,9 @@
 #include <string>
 #include <cassert>
 
-//The class Action is an empty class, aimed at maintaing the code tidier.
-class Action {};
-
 namespace game {
 	namespace Oxo {
-	class OxoAction: public Action {
+	class OxoAction {
 		public:
 			/*The class OxoAction implements the action that are possible on the Oxo board and
 			* defines the constructors*/
@@ -19,9 +16,9 @@ namespace game {
 			int row{0};
 			int column{0};
 
-			
+
 			//Defining the constructors, accepting both a pair and two integers as input
-			OxoAction()= default;	
+			OxoAction()= default;
 			OxoAction(std::pair<int, int> input);
 			OxoAction(const int& first, const int& second);
 
@@ -36,7 +33,7 @@ namespace game {
 	}
 
 	namespace Nim {
-		class NimAction: public Action {
+		class NimAction {
 			//The class NimAction implements the actions possible during a Nim play
 		public:
 
