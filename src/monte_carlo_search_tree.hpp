@@ -293,7 +293,6 @@ MonteCarloSearchTree<Game,Move>::back_propagation(NodePointerType current_leaf, 
   Node<Game,Move>* temp_ptr = current_leaf->get_parent();
   while ( temp_ptr!=nullptr ) {
     temp_ptr->update(score, inner_iter);
-    temp_ptr = temp_ptr->get_parent();
   }
 }
 
