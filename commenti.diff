@@ -1,0 +1,122 @@
+diff --git a/Makefile b/Makefile
+index bc797ab..9edba67 100644
+--- a/Makefile
++++ b/Makefile
+@@ -20,6 +20,7 @@ endif
+ 
+ all: src/action.o
+ 
++# E: Questa regola è inutile, all dipende da 'src/action.o'
+ obj/action.o: src/action.cpp src/action.hpp
+ 	$(CXX) $(CXXFLAGS) $(OPTFLAGS) $(CPPFLAGS) -c $< -o $@
+ 
+diff --git a/src/action.hpp b/src/action.hpp
+index 65a3046..0df8218 100644
+--- a/src/action.hpp
++++ b/src/action.hpp
+@@ -5,6 +5,14 @@
+ #include <string>
+ #include <cassert>
+ 
++/* E: A cosa serve questa classe?
++ *    Non è astratta, le sue figlie vengono usate solo come
++ *    argomento template.
++ *    Poi, visto che definite due classi senza alcun legame
++ *    in due namespace diversi, perché non sono semplicemente
++ *    due classi separate e distinte in due file?
++ *    (Be', quattro, chiaramente)
++ */
+ //The class Action is an empty class, aimed at maintaing the code tidier.
+ class Action {};
+ 
+@@ -28,6 +36,9 @@ namespace game {
+ 			//for debugging
+ 			std::string to_string() const;
+ 
++          /* E: sarebbe meglio farlo come funzione, invece che metodo,
++           *    visto che è un operatore commutativo.
++           */
+ 			//Equality operator defined comparing if rows and columns match between different actions
+ 			bool operator==(const OxoAction& rhs) const;
+ 
+diff --git a/src/game.hpp b/src/game.hpp
+index 770c04e..7cc0abf 100644
+--- a/src/game.hpp
++++ b/src/game.hpp
+@@ -19,6 +19,14 @@ namespace game {
+ 	class IllegalAction{}; //if the action is not legal
+ 	class NoActionPlayed{}; //if no action has been played
+ 
++  /* E: Anche qui, perché Game è una classe astratta?
++   *    Sia Node che MonteCarloSearchTree prendono le sue figlie come
++   *    argomento template.
++   *    Di fatto state irrigidendo i vincoli sulle figlie
++   *    (l'interfaccia non è più implicita, ma esplicita)
++   *    senza guadagnare nulla in termini di robustezza del codice,
++   *    che comunque non compila se manca un metodo che serve davvero.
++   */
+ 	template <class Action>
+ 	class Game {
+ 		//The class Game implements the interface of game
+diff --git a/src/monte_carlo_search_tree.hpp b/src/monte_carlo_search_tree.hpp
+index 2b6deb3..65b781f 100644
+--- a/src/monte_carlo_search_tree.hpp
++++ b/src/monte_carlo_search_tree.hpp
+@@ -10,6 +10,7 @@
+ #include <mpi.h>
+ // It may not work for Windows; try something like:
+ // #include "C:\Program Files (x86)\IntelSWTools\mpi\2019.0.117\intel64\include\mpi.h"
++// E: Oppure basta mettere l'opportuna opzione -I<percorso> per il preprocessore
+ 
+ // DEBUG
+ #include <cassert>
+@@ -87,6 +88,9 @@ private:
+ 
+   // This is not a boolean for the simple fact that it has to be passed via reference
+   // to the function MPI_Initialized, which takes a ref. to int as input
++  /* E: molto probabilmente non bisogna passare un riferimento, visto che
++   *    MPI ha binding in C.
++   */
+   int is_parallel = 0;
+ 
+   unsigned outer_iter;
+diff --git a/src/nim.hpp b/src/nim.hpp
+index 5ddc281..a00876b 100644
+--- a/src/nim.hpp
++++ b/src/nim.hpp
+@@ -44,6 +44,7 @@ namespace game {
+ 
+ 			//Method to check if the game is over given the status of the board
+ 			void update_terminal_status()  {
++                          // E: basta assegnare la condizione a is_terminal
+ 				if ((board[0] == 0u) && (board[1] == 0u) && (board[2] == 0u))
+ 					is_terminal= true;
+ 				else
+@@ -151,6 +152,7 @@ namespace game {
+ 				std::cout << "**************************************" << '\n';
+ 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
+ 
++                                // E: i booleani sono fatti apposta per essere controllati, non c'è bisogno di confrontarli a true
+ 				if (no_move_played == true)
+ 					std::cout << "First move.";
+ 				else
+diff --git a/test/nim_test/random_nim_match/main.cpp b/test/nim_test/random_nim_match/main.cpp
+index 25650da..cddde93 100644
+--- a/test/nim_test/random_nim_match/main.cpp
++++ b/test/nim_test/random_nim_match/main.cpp
+@@ -1,3 +1,8 @@
++/* E: Gli #include così non vanno bene, il modo corretto,
++ *    o quantomeno usato in tutti i progetti seri, è mettere
++ *    solo il nome del file negli #include e usare -I<percorso>
++ *    come opzione per il preprocessore.
++ */
+ #include "../../../src/nim.hpp"
+ #include "../../../src/game.hpp"
+ #include "../../../src/action.hpp"
+@@ -15,4 +20,4 @@ int main(int argc, char const *argv[])
+ 	} while (new_game.get_terminal_status() == false);
+ 
+ 	return 0;
+-}
+\ No newline at end of file
++}

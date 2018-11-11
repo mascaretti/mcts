@@ -85,8 +85,7 @@ private:
   NodePointerType root;
   NodePointerType current_game_node;
 
-  // This is not a boolean for the simple fact that it has to be passed via reference
-  // to the function MPI_Initialized, which takes a ref. to int as input
+  // bool is_parallel = false;
   int is_parallel = 0;
 
   unsigned outer_iter;
@@ -116,6 +115,11 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(unsigned oi, unsigned ii):
   {
     set_rand_seed();
     rng.seed(seed);
+    /*
+      int tmp;
+      MPI_Initialized( &tmp );
+      is_parallel = (bool)tmp;
+    */
     MPI_Initialized( &is_parallel );
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
@@ -128,6 +132,11 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(unsigned oi, unsigned ii, 
   {
     set_rand_seed();
     rng.seed(seed);
+    /*
+      int tmp;
+      MPI_Initialized( &tmp );
+      is_parallel = (bool)tmp;
+    */
     MPI_Initialized( &is_parallel );
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
@@ -138,6 +147,11 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s, unsigned oi, unsign
   root(), current_game_node(root),
   seed(s), rng(s), outer_iter(oi), inner_iter(ii)
   {
+    /*
+      int tmp;
+      MPI_Initialized( &tmp );
+      is_parallel = (bool)tmp;
+    */
     MPI_Initialized( &is_parallel );
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
@@ -148,6 +162,11 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s, unsigned oi, unsign
   root(), current_game_node(root),
   seed(s), rng(s), outer_iter(oi), inner_iter(ii), ucb_constant(c)
   {
+    /*
+      int tmp;
+      MPI_Initialized( &tmp );
+      is_parallel = (bool)tmp;
+    */
     MPI_Initialized( &is_parallel );
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
@@ -293,6 +312,7 @@ MonteCarloSearchTree<Game,Move>::back_propagation(NodePointerType current_leaf, 
   Node<Game,Move>* temp_ptr = current_leaf->get_parent();
   while ( temp_ptr!=nullptr ) {
     temp_ptr->update(score, inner_iter);
+    temp_ptr = temp_ptr->get_parent();
   }
 }
 
