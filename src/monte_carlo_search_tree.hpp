@@ -85,8 +85,7 @@ private:
   NodePointerType root;
   NodePointerType current_game_node;
 
-  // bool is_parallel = false;
-  int is_parallel = 0;
+  bool is_parallel = false;
 
   unsigned outer_iter;
   unsigned inner_iter;
@@ -115,12 +114,9 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(unsigned oi, unsigned ii):
   {
     set_rand_seed();
     rng.seed(seed);
-    /*
-      int tmp;
-      MPI_Initialized( &tmp );
-      is_parallel = (bool)tmp;
-    */
-    MPI_Initialized( &is_parallel );
+    int tmp;
+    MPI_Initialized( &tmp );
+    is_parallel = (bool)tmp;
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
   }
@@ -132,12 +128,9 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(unsigned oi, unsigned ii, 
   {
     set_rand_seed();
     rng.seed(seed);
-    /*
-      int tmp;
-      MPI_Initialized( &tmp );
-      is_parallel = (bool)tmp;
-    */
-    MPI_Initialized( &is_parallel );
+    int tmp;
+    MPI_Initialized( &tmp );
+    is_parallel = (bool)tmp;
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
   }
@@ -147,12 +140,9 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s, unsigned oi, unsign
   root(), current_game_node(root),
   seed(s), rng(s), outer_iter(oi), inner_iter(ii)
   {
-    /*
-      int tmp;
-      MPI_Initialized( &tmp );
-      is_parallel = (bool)tmp;
-    */
-    MPI_Initialized( &is_parallel );
+    int tmp;
+    MPI_Initialized( &tmp );
+    is_parallel = (bool)tmp;
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
   }
@@ -162,12 +152,9 @@ MonteCarloSearchTree<Game,Move>::MonteCarloSearchTree(int s, unsigned oi, unsign
   root(), current_game_node(root),
   seed(s), rng(s), outer_iter(oi), inner_iter(ii), ucb_constant(c)
   {
-    /*
-      int tmp;
-      MPI_Initialized( &tmp );
-      is_parallel = (bool)tmp;
-    */
-    MPI_Initialized( &is_parallel );
+    int tmp;
+    MPI_Initialized( &tmp );
+    is_parallel = (bool)tmp;
     root = std::make_shared< Node<Game, Move> >();
     current_game_node = root;
   }
