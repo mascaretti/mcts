@@ -64,12 +64,10 @@ test/struct_test/test_nim_tree.o: include/nim.hpp
 
 .PHONY: all clean
 
-all: $(EXEC)
+all: obj/nim_action.o obj/oxo_action.o $(EXEC)
 
 % : %.o obj/nim_action.o obj/oxo_action.o
 	$(CXX) $(CXXFLAGS) $(OPTFLAGS) $^ -o $@
-
-test_lib: obj/nim_action.o obj/oxo_action.o
 
 obj/%.o: src/%.cpp include/%.hpp
 	if [ ! -d "obj" ]; then mkdir obj; fi
