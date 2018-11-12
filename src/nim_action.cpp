@@ -3,10 +3,6 @@
 #include <iostream>
 
 namespace game {
-<<<<<<< HEAD
-
-=======
->>>>>>> master
   namespace Nim {
 
     //Constructor taking a pair as an input. Optionally asserting if the number of cards taken is positive
