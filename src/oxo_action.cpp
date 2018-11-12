@@ -31,6 +31,13 @@ namespace game {
 				return false;
 		};
 
+		bool operator==(const OxoAction& lhs, const OxoAction& rhs) {
+			if ((row == rhs.row) && (column == rhs.column))
+				return true;
+			else
+				return false;
+		};
+
 	}
 
 }

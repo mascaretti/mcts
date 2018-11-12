@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace game {
-  
+
   namespace Nim {
 
     //Constructor taking a pair as an input. Optionally asserting if the number of cards taken is positive
@@ -35,6 +35,11 @@ namespace game {
         return false;
     };
 
-  }
-
-}
+    bool operator==(const NimAction& lhs, const NimAction& rhs) {
+      if ((pile == rhs.pile) && (number == rhs.number))
+        return true;
+      else
+        return false;
+    };
+  } //namespace Nim
+} //namespace game

@@ -26,6 +26,8 @@ namespace game {
       //Equality operator, checking if the pile and number of different actions are the same
       bool operator==(const NimAction& rhs) const;
       };
+
+    bool operator==(const NimAction& lhs, const NimAction& rhs);
     }
   }
 

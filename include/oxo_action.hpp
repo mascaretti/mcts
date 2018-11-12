@@ -28,6 +28,9 @@ namespace game {
   			//Equality operator defined comparing if rows and columns match between different actions
   			bool operator==(const OxoAction& rhs) const;
   		};
+
+		//Equality operator defined as a free function, comparing if rows and columns match between different actions
+		bool operator==(const OxoAction& lhs, const OxoAction& rhs);
 	}
 }
 
