@@ -25,7 +25,7 @@ namespace game {
 
 		//Equality operator, checking if actions have the same properties
 		bool operator==(const OxoAction& lhs, const OxoAction& rhs) {
-			if ((row == rhs.row) && (column == rhs.column))
+			if ((lhs.row == rhs.row) && (lhs.column == rhs.column))
 				return true;
 			else
 				return false;
