@@ -25,13 +25,13 @@ Optional:
 ## Running
 
 - Parallel:
-  * `$ mpiexec -np [number of cores] [executable]` to run the parallel script.
+  * run `$ mpiexec -np [number of cores] [executable]` to run the parallel scripts.
 
 - Speedup test:
   * run `test_gen.sh` to run all the tests in the folder **speedup_test**.
 
 - Serial:
-  * run `$ ./[executable]` to execute the serial script.
+  * run `$ ./[executable]` to execute the serial scripts.
 
 ## Description
 
