@@ -24,13 +24,6 @@ namespace game {
 		};
 
 		//Equality operator, checking if actions have the same properties
-		bool OxoAction::operator==(const OxoAction& rhs) const {
-			if ((row == rhs.row) && (column == rhs.column))
-				return true;
-			else
-				return false;
-		};
-
 		bool operator==(const OxoAction& lhs, const OxoAction& rhs) {
 			if ((row == rhs.row) && (column == rhs.column))
 				return true;
@@ -38,6 +31,5 @@ namespace game {
 				return false;
 		};
 
-	}
-
-}
+	} //namespace Oxo
+} //namespace game

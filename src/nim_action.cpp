@@ -28,15 +28,8 @@ namespace game {
     };
 
     //Equality operator, checking if two actions share the same properties
-    bool NimAction::operator==(const NimAction& rhs) const {
-      if ((pile == rhs.pile) && (number == rhs.number))
-        return true;
-      else
-        return false;
-    };
-
     bool operator==(const NimAction& lhs, const NimAction& rhs) {
-      if ((pile == rhs.pile) && (number == rhs.number))
+      if ((lhs.pile == rhs.pile) && (lhs.number == rhs.number))
         return true;
       else
         return false;

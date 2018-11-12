@@ -23,12 +23,12 @@ namespace game {
       //for debugging
       std::string to_string() const;
 
-      //Equality operator, checking if the pile and number of different actions are the same
-      bool operator==(const NimAction& rhs) const;
-      };
+      }; //class NimAction
 
+    //Equality operator, checking if the pile and number of different actions are the same
     bool operator==(const NimAction& lhs, const NimAction& rhs);
-    }
-  }
+    
+    } //namespace Nim
+  } //namespace game
 
 #endif

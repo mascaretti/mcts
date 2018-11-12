@@ -25,13 +25,11 @@ namespace game {
   			//for debugging
   			std::string to_string() const;
 
-  			//Equality operator defined comparing if rows and columns match between different actions
-  			bool operator==(const OxoAction& rhs) const;
-  		};
+  		}; //class OxoAction
 
 		//Equality operator defined as a free function, comparing if rows and columns match between different actions
 		bool operator==(const OxoAction& lhs, const OxoAction& rhs);
-	}
-}
+	} //namespace Oxo
+} //namespace game
 
 #endif
