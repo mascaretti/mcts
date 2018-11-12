@@ -77,6 +77,7 @@ all: $(EXEC)
 test_lib: obj/nim_action.o obj/oxo_action.o
 
 obj/%.o: src/%.cpp include/%.hpp
+	if [ ! -d "obj" ]; then mkdir obj; fi
 	$(CXX) $(CXXFLAGS) $(OPTFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
