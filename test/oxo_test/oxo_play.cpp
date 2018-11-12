@@ -3,7 +3,7 @@
 int main(int argc, char const *argv[])
 {
 
-	game::Oxo::OxoGame test_game;
+	game::Oxo::OxoGame<> test_game;
 
 	do {
 

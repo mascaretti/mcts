@@ -25,7 +25,7 @@ struct seed_generator {
 
 int main() {
 
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using OxoAction = game::Oxo::OxoAction;
 using Nim = game::Nim::NimGame<>;
 using NimAction = game::Nim::NimAction;

@@ -2,7 +2,7 @@
 
 int main(int argc, char const *argv[])
 {
-	game::Oxo::OxoGame new_game{19};
+	game::Oxo::OxoGame<> new_game{19};
 
 	do {
 		std::cout << "Here" << '\n';

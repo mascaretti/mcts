@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using OxoMove = game::Oxo::OxoAction;
 using Nim = game::Nim::NimGame<>;
 using NimMove = game::Nim::NimAction;

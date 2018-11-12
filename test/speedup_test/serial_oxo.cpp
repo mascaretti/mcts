@@ -12,7 +12,7 @@ struct seed_generator {
 int main(int argc, char** argv) {
 
 // Namespaces
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using Move = game::Oxo::OxoAction;
 
 // Output

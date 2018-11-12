@@ -4,7 +4,7 @@
 int main() {
 
 // Namespaces
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using Move = game::Oxo::OxoAction;
 
 int outer_it1 = 10, inner_it1 = 10;

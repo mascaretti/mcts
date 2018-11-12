@@ -8,7 +8,7 @@ int main() {
 
 // Change the blow calls to include the 2 template arg.
 
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using Move = game::Oxo::OxoAction;
 using NodePointerType = Node<Oxo, Move>::NodePointerType;
 
