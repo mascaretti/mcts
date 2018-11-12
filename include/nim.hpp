@@ -1,8 +1,8 @@
 #ifndef HPP__NIM__HEADER__HPP
 #define HPP__NIM__HEADER__HPP
 
-#include "action.hpp"
 #include "game.hpp"
+#include "nim_action.hpp"
 #include <iostream>
 #include <array>
 #include <vector>
@@ -12,13 +12,12 @@
 namespace game {
 	namespace Nim {
 
-		template <unsigned int N1= 7u, unsigned N2= 7u, unsigned N3= 7u>
-		class NimGame: public Game<NimAction> {
+		template <unsigned int N1= 7u, unsigned N2= 7u, unsigned N3= 7u, class Action= NimAction>
+		class NimGame {
 		//The NimGame class is a template class, creating a 3-pile Nim game
 		//in which the number of cards per pile is given by the template parameters.
 
-			using Action= NimAction;
-			using NimBoard= std::array<unsigned int, 3>;
+		using NimBoard= std::array<unsigned int, 3>;
 
 		private:
 			//to check if the game is over
@@ -42,14 +41,6 @@ namespace game {
 			//Board of the game
 			NimBoard board{{N1, N2, N3}};
 
-			//Method to check if the game is over given the status of the board
-			void update_terminal_status()  {
-				if ((board[0] == 0u) && (board[1] == 0u) && (board[2] == 0u))
-					is_terminal= true;
-				else
-					is_terminal= false;
-			};
-
 		public:
 
 			//Default constructor
@@ -65,31 +56,31 @@ namespace game {
 			NimGame& operator=(const NimGame& Other)= default;
 
 			//Method returning if the game is over
-			virtual bool get_terminal_status() override {
+			bool get_terminal_status() {
 				return is_terminal;
 			}; //true if current state is terminal
 
 			//Method returning the player moving *next*
-			virtual int get_agent_id() override {
+			int get_agent_id() {
 				return agent_id;
 			}; //returns the agent who is about to make a decision
 
 
 			//Method taking an action as an input and updating the status of the board
-			virtual void apply_action(const Action& action) override {
+			void apply_action(const Action& action) {
 				//Check if the action to be played is legal
 				if (board[action.pile] < action.number)
 					throw IllegalAction{};
 
 				//update the action played status
-				if (no_move_played == true)
+				if (no_move_played)
 					no_move_played= false;
 
 				//Update the status of the board
 				board[action.pile]-= action.number;
 
-				//control if terminal
-				update_terminal_status();
+				//control if terminal and update
+				((board[0] == 0u) && (board[1] == 0u) && (board[2] == 0u)) ? is_terminal= true : is_terminal= false;
 
 				//Changing the agent_id
 				agent_id= ((agent_id == 1) ? 2 : 1);
@@ -99,7 +90,7 @@ namespace game {
 			};
 
 			//Method returning the set of viable action given the current board status
-			virtual std::vector<Action> get_actions() const override {
+			std::vector<Action> get_actions() const {
 
 				//check if actions available
 				/*
@@ -119,8 +110,8 @@ namespace game {
 			}
 
 			//Method returning a legal random action
-			virtual Action random_action() override {
-				if (is_terminal == true)
+			Action random_action() {
+				if (is_terminal)
 					throw NoRandomActions{};
 
 				int max_actions= get_actions().size() - 1;
@@ -132,15 +123,15 @@ namespace game {
 			}; //returns a random action legal at the current state
 
 			//Method returning the utility at the terminal node if we are at a terminal node
-			virtual int evaluate() override {
-				if (is_terminal == false)
+			int evaluate() {
+				if (!is_terminal)
 					throw GameNotOver{};
 				else
 					return (agent_id == 1) ? -1 : 1;
 			}; //returns the utility as an integer if state is terminal, otherwise throws error
 
 			//Method to set a new seed for random actions
-			virtual void set_seed(int new_seed) override {
+			void set_seed(int new_seed) {
 				random_action_seed= new_seed;
 				gen.seed(random_action_seed);
 			}; //sets new seed
@@ -151,13 +142,13 @@ namespace game {
 				std::cout << "**************************************" << '\n';
 				std::cout << "Now playing: " << 3 - get_agent_id() << '\n';
 
-				if (no_move_played == true)
+				if (no_move_played)
 					std::cout << "First move.";
 				else
 					std::cout << "It plays: " << get_last_action().to_string() << '\n';
 
 				std::cout << "Game finished? " << get_terminal_status() << '\n';
-				if (get_terminal_status() == true)
+				if (get_terminal_status())
 					std::cout << "Outcome: " << evaluate() << '\n';
 				else
 					std::cout << "Now up to: " << get_agent_id() << '\n';
@@ -167,7 +158,7 @@ namespace game {
 
 			//Method to get the last action played
 			Action get_last_action() const {
-				if (no_move_played == true)
+				if (no_move_played)
 					throw NoActionPlayed{};
 				return last_action;
 			};
@@ -181,13 +172,13 @@ namespace game {
 			}; //print the value as string
 
 			//Method to input a move from a human player
-			virtual int human_input() override {
+			int human_input() {
 				auto actions = get_actions();
 				bool correct_move{false};
 
 				unsigned input;
 
-				while (correct_move == false) {
+				while (!correct_move) {
 				std::cout << "Human: this are the moves left for you." << std::endl;
 				int j{1};
 				for (auto i = std::begin(actions); i != std::end(actions); ++i) {

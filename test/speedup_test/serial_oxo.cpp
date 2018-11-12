@@ -1,5 +1,5 @@
-#include "../../src/monte_carlo_search_tree.hpp"
-#include "../../src/oxo.hpp"
+#include "monte_carlo_search_tree.hpp"
+#include "oxo.hpp"
 
 #include <fstream>
 #include <ctime>
@@ -12,7 +12,7 @@ struct seed_generator {
 int main(int argc, char** argv) {
 
 // Namespaces
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using Move = game::Oxo::OxoAction;
 
 // Output

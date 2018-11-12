@@ -24,10 +24,12 @@ namespace game {
 		};
 
 		//Equality operator, checking if actions have the same properties
-		bool OxoAction::operator==(const OxoAction& rhs) const {
-			if ((row == rhs.row) && (column == rhs.column))
+		bool operator==(const OxoAction& lhs, const OxoAction& rhs) {
+			if ((lhs.row == rhs.row) && (lhs.column == rhs.column))
 				return true;
 			else
 				return false;
 		};
-	}
+
+	} //namespace Oxo
+} //namespace game

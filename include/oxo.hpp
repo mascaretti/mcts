@@ -1,7 +1,7 @@
 #ifndef HPP__OXO__HEADER__HPP
 #define HPP__OXO__HEADER__HPP
 
-#include "action.hpp"
+#include "oxo_action.hpp"
 #include "game.hpp"
 #include <iostream>
 #include <limits>
@@ -9,10 +9,10 @@
 namespace game {
 	namespace Oxo {
 
-	class OxoGame: public Game<OxoAction> {
+	template <class Action= OxoAction>
+	class OxoGame {
 
-		using Action= OxoAction;
-			//The class Oxo implements a 3x3 tic-tac-toe board
+		//The class Oxo implements a 3x3 tic-tac-toe board
 
 		private:
 			//to check if the game is over
@@ -133,17 +133,17 @@ namespace game {
 			OxoGame& operator=(const OxoGame& other)= default;
 
 			//method to know whether the game is over
-			virtual bool get_terminal_status() override {
+			bool get_terminal_status() {
 				return is_terminal;
 			}; //true if current state is terminal
 
 			//method to know what agen will play *next*
-			virtual int get_agent_id() override {
+			int get_agent_id() {
 				return agent_id;
 			}; //returns the agent who is about to make a decision
 
 			//Method to apply an action and update the status of the board
-			virtual void apply_action(const Action& action) override {
+			void apply_action(const Action& action) {
 				//Checking if the action has not been played before
 				if (board[action.row][action.column] != 0)
 					throw ActionAlreadyPlayed{};
@@ -174,7 +174,7 @@ namespace game {
 			}; //returns void, but changes the internal state
 
 			//Method to know what legal actions it is possible to play
-			virtual std::vector<Action> get_actions() const override {
+			std::vector<Action> get_actions() const {
 
 				//check if actions available
 				/*
@@ -194,7 +194,7 @@ namespace game {
 			}; //returns a vector of legal action at current state
 
 			//Method returning a legal action
-			virtual Action random_action() override {
+			Action random_action() {
 				if (is_terminal == true)
 					throw NoRandomActions{};
 
@@ -209,7 +209,7 @@ namespace game {
 			}; //returns a random action legal at the current state
 
 			//Method returning the utility if the status of the game is a terminal node
-			virtual int evaluate() override {
+			int evaluate() {
 				if ((is_terminal == false) && (winner_exists == false))
 					throw GameNotOver{};
 				if ((is_terminal == true) && (winner_exists == false))
@@ -228,7 +228,7 @@ namespace game {
 			};
 
 			//Method to set a new seed
-			virtual void set_seed(int new_seed) override {
+			void set_seed(int new_seed) {
 				random_action_seed= new_seed;
 				gen.seed(random_action_seed);
 			}; //sets new seed
@@ -261,7 +261,7 @@ namespace game {
 			};
 
 			//Method to allow input from a human player
-			virtual int human_input() override {
+			int human_input() {
 				auto actions = get_actions();
 				bool correct_move{false};
 

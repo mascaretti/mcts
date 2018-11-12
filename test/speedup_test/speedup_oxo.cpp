@@ -1,5 +1,5 @@
-#include "../../src/monte_carlo_search_tree.hpp"
-#include "../../src/oxo.hpp"
+#include "monte_carlo_search_tree.hpp"
+#include "oxo.hpp"
 
 #include <fstream>
 #include <ctime>
@@ -18,7 +18,7 @@ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 // Namespaces
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using Move = game::Oxo::OxoAction;
 
 // Output

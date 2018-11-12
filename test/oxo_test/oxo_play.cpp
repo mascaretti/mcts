@@ -1,12 +1,9 @@
-//#include "../../src/game.hpp"
-#include "../../../src/oxo.hpp"
-#include "../../../src/action.hpp"
-
+#include "oxo.hpp"
 
 int main(int argc, char const *argv[])
 {
 
-	game::Oxo::OxoGame test_game;
+	game::Oxo::OxoGame<> test_game;
 
 	do {
 

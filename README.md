@@ -22,25 +22,16 @@ Optional:
 - Run `$ make [options]` in the main directory.
   * Selecting `DEBUG=yes` (`DEBUG=no`) enables (disable) debugging (with GDB, for instance)
 
-- To compile the example scripts
-  * `$ cd example`
-  * `$ make [options]`
-
-- To compile the testing scripts
-  * `$ cd test/[test_name]`
-  * `$ make [options]`
-
 ## Running
 
-- Run: `$ make run [options]` to run the parallel script.
-  * Setting `NP=n_cores` changes the number of processes
-  * `DEFAULT_EXEC=exec` changes the executable to run.
+- Parallel:
+  * run `$ mpiexec -np [number of cores] [executable]` to run the parallel scripts.
 
-- Test:
+- Speedup test:
   * run `test_gen.sh` to run all the tests in the folder **speedup_test**.
 
-- Serial: 
-  * run `$ ./[executable]` to execute the serial script.
+- Serial:
+  * run `$ ./[executable]` to execute the serial scripts.
 
 ## Description
 

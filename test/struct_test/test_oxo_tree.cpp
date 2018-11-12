@@ -1,10 +1,10 @@
-#include "../../src/monte_carlo_search_tree.hpp"
-#include "../../src/oxo.hpp"
+#include "monte_carlo_search_tree.hpp"
+#include "oxo.hpp"
 
 int main() {
 
 // Namespaces
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using Move = game::Oxo::OxoAction;
 
 int outer_it1 = 10, inner_it1 = 10;

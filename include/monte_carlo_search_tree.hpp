@@ -177,7 +177,7 @@ MonteCarloSearchTree<Game,Move>::compute_ucb(const NodePointerType& target_node)
 }
 
 template<class Game, class Move>
-typename MonteCarloSearchTree<Game,Move>::NodePointerType /* ??? */
+typename MonteCarloSearchTree<Game,Move>::NodePointerType
 MonteCarloSearchTree<Game,Move>::best_child_ucb(const NodePointerType& target_parent) const
 {
   std::vector<NodePointerType> children = target_parent->get_children();
@@ -195,7 +195,7 @@ MonteCarloSearchTree<Game,Move>::best_child_ucb(const NodePointerType& target_pa
 }
 
 template<class Game, class Move>
-typename MonteCarloSearchTree<Game,Move>::NodePointerType /* ??? */
+typename MonteCarloSearchTree<Game,Move>::NodePointerType
 MonteCarloSearchTree<Game,Move>::select() const
 {
   NodePointerType selected_node = current_game_node;
@@ -210,7 +210,7 @@ MonteCarloSearchTree<Game,Move>::select() const
 }
 
 template<class Game, class Move>
-typename Node<Game,Move>::NodePointerType  /* ??? */
+typename Node<Game,Move>::NodePointerType
 MonteCarloSearchTree<Game,Move>::expand(const NodePointerType current_parent)
 {
   // NodePointerType expanded_node = nullptr;

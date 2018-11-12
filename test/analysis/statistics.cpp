@@ -1,6 +1,6 @@
-#include "../../src/monte_carlo_search_tree.hpp"
-#include "../../src/oxo.hpp"
-#include "../../src/nim.hpp"
+#include "monte_carlo_search_tree.hpp"
+#include "oxo.hpp"
+#include "nim.hpp"
 
 #include <fstream>
 #include <ctime>
@@ -25,7 +25,7 @@ struct seed_generator {
 
 int main() {
 
-using Oxo = game::Oxo::OxoGame;
+using Oxo = game::Oxo::OxoGame<>;
 using OxoAction = game::Oxo::OxoAction;
 using Nim = game::Nim::NimGame<>;
 using NimAction = game::Nim::NimAction;
