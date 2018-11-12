@@ -1,7 +1,3 @@
-# C++ compiler
-
-# CXX = g++
-# CXX = clang
 CXX = mpicxx
 
 WARNFLAGS = -Wall
@@ -32,7 +28,6 @@ SRCS += test/oxo_test/oxo_play.cpp test/oxo_test/random_oxo_match.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
-# EXEC = examples/ai_vs_random examples/ai_vs_ai examples/ai_vs_human
 EXEC = $(SRCS:.cpp= )
 
 .DEFAULT_GOAL = all
