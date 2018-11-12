@@ -1,5 +1,5 @@
-#include "../../src/node.hpp"
-#include "../../src/oxo.hpp"
+#include "node.hpp"
+#include "oxo.hpp"
 
 #include <string>
 #include <iostream>

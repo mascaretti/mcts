@@ -1,6 +1,4 @@
-#include "../../../src/nim.hpp"
-#include "../../../src/game.hpp"
-#include "../../../src/action.hpp"
+#include "nim.hpp"
 
 int main(int argc, char const *argv[])
 {

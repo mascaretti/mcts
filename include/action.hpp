@@ -19,9 +19,9 @@ namespace game {
 			int row{0};
 			int column{0};
 
-			
+
 			//Defining the constructors, accepting both a pair and two integers as input
-			OxoAction()= default;	
+			OxoAction()= default;
 			OxoAction(std::pair<int, int> input);
 			OxoAction(const int& first, const int& second);
 

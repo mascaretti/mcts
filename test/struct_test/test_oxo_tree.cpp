@@ -1,5 +1,5 @@
-#include "../../src/monte_carlo_search_tree.hpp"
-#include "../../src/oxo.hpp"
+#include "monte_carlo_search_tree.hpp"
+#include "oxo.hpp"
 
 int main() {
 
