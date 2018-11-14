@@ -145,7 +145,7 @@ namespace game {
 			//Method to apply an action and update the status of the board
 			void apply_action(const Action& action) {
 				//Checking if the action has not been played before
-				if (board[action.row][action.column] != 0)
+				if (board[action.get_row()][action.get_column()] != 0)
 					throw ActionAlreadyPlayed{};
 
 
@@ -156,10 +156,10 @@ namespace game {
 
 				//Action has effect depending on whose turn it is
 				if (agent_id == 1)
-					board[action.row][action.column]= 1;
+					board[action.get_row()][action.get_column()]= 1;
 
 				else
-					board[action.row][action.column]= -1;
+					board[action.get_row()][action.get_column()]= -1;
 
 				//control if terminal
 				update_terminal_status();

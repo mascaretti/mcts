@@ -15,6 +15,14 @@ namespace game {
       assert(number > 0);
     };
 
+    int NimAction::get_pile() const {
+      return pile;
+    }
+
+    int NimAction::get_number() const {
+      return number;
+    }
+
     //Method to return a string with the properties of the action
     std::string NimAction::to_string() const {
       std::string data;

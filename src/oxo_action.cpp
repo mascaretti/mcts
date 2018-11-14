@@ -12,6 +12,15 @@ namespace game {
 		//Constructor taking two integers as an input
 		OxoAction::OxoAction(const int& first, const int& second): row{first}, column{second} {};
 
+		//getters
+		int OxoAction::get_row() const {
+			return row;
+		}
+
+		int OxoAction::get_column() const {
+			return column;
+		}
+
 		//This is to build a string with the information regarding the action
 		std::string OxoAction::to_string() const {
 			std::string data;

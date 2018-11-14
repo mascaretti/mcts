@@ -69,7 +69,8 @@ namespace game {
 			//Method taking an action as an input and updating the status of the board
 			void apply_action(const Action& action) {
 				//Check if the action to be played is legal
-				if (board[action.pile] < action.number)
+				assert(action.get_number() <= std::numeric_limits<int>::max());
+				if (board[action.get_pile()] < (unsigned int) action.get_number())
 					throw IllegalAction{};
 
 				//update the action played status
@@ -77,7 +78,7 @@ namespace game {
 					no_move_played= false;
 
 				//Update the status of the board
-				board[action.pile]-= action.number;
+				board[action.get_pile()]-= action.get_number();
 
 				//control if terminal and update
 				((board[0] == 0u) && (board[1] == 0u) && (board[2] == 0u)) ? is_terminal= true : is_terminal= false;
